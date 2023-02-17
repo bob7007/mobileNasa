@@ -1,5 +1,5 @@
 
-
+import 'react-native-gesture-handler';
 import * as React from 'react';
 import BaseApp from "./src/baseApp";
 import { Provider as PaperProvider } from 'react-native-paper';

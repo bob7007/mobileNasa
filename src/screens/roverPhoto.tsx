@@ -1,4 +1,3 @@
-
 import {
     StyleSheet,
     Text,
@@ -10,13 +9,15 @@ import {
   import React, { useState, useEffect } from "react";
   import axios from "axios";
   import {Modal,Portal,Provider, Switch,Button, SegmentedButtons,Snackbar ,IconButton    } from 'react-native-paper';
-  import MainStackfrom from "../src/routes/mainStack";
+ 
 
-  const baseApp=()=> {
+  const roverPhoto=()=>{
 
-    return (
-     <MainStackfrom></MainStackfrom>
+
+    return(
+        <Text style={{textAlign:"center"}}>rover photo</Text>
     );
+
   }
-  
-  export default baseApp
+
+  export default roverPhoto;
