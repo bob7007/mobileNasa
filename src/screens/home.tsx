@@ -12,8 +12,10 @@ import {
   import {Modal,Portal,Provider, Switch,Button, SegmentedButtons,Snackbar ,IconButton    } from 'react-native-paper';
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
+
+
   const Home=({ navigation })=> {
-    const [value, setValue] = React.useState('');
+    const [value, setValue] = React.useState('home');
     const [roverData, setRoverData] = useState([]);
     const [curiosity, setCuriosity] = useState([]);
     const [opportunity, setOpportunity] = useState([]);
@@ -28,7 +30,7 @@ import {
     const serviceType = "mars-photos/api/v1/rovers/";
   
     const getCuriosityURL=`${baseUrl}${serviceType}curiosity/latest_photos?page=1&api_key=${apiAuth}`;
-    const getOpportunityyURL=`${baseUrl}${serviceType}curiosity/latest_photos?page=1&api_key=${apiAuth}`;
+    const getOpportunityURL=`${baseUrl}${serviceType}curiosity/latest_photos?page=1&api_key=${apiAuth}`;
     const getspiritURL=`${baseUrl}${serviceType}curiosity/latest_photos?page=1&api_key=${apiAuth}`;
     const getPerseverance=`${baseUrl}${serviceType}curiosity/latest_photos?page=1&api_key=${apiAuth}`;
     const getPictureOfDay=`https://api.nasa.gov/planetary/apod?api_key=${apiAuth}`;
@@ -40,29 +42,19 @@ import {
       date: "2023-02-16",
       description:"Once upon a midnight dreary, while I pondered weak and weary, O'er volumes of astronomy and forgotten lore, I stumbled upon this snapshot, cosmic and eerie, A sight that filled my heart with awe and more. Two stars, like sentinels, anchored the foreground, Of our Milky Way galaxy, a sight to behold, Beyond them, a cluster of Hydra, galaxies abound, 100 million light-years away, a story to be told. Three large galaxies, ellipticals and a spiral blue, Dominant and grand, each 150,000 light-years wide, But it was the overlapping pair that caught my view, Cataloged as NGC 3314, a sight I cannot hide. Abell 1060, the Hydra galaxy cluster's name, One of three large galaxy clusters close to our Milky Way, A universe bound by gravity, a celestial game, Where clusters align over larger scales, I cannot sway. At a distance of 100 million light-years, this snapshot's size, 1.3 million light-years across, a cosmic delight, A momentary glimpse into the universe's guise, But even this shall fade, and be nevermore in sight.",
     }
-    //setDayPic(testUrl);
   
     useEffect(() => {
-      //getDailyPic();
-      
-      setDayPic(testUrl);
+      getDailyPic();
+      //setDayPic(testUrl);
 
     }, []);
-
-  
-    useEffect(() => {
-        console.log("nav: ",value);
-  
-      }, [navigation]);
-
-
   
     const getDailyPic = ()=>{
       axios
       .get(getPictureOfDay)
       .then((response) => {
         setDayPic(response.data);
-        console.log(response.data.hdurl);
+        console.log(response.data);
       })
       .catch((err) => {
         console.log(err);
@@ -98,7 +90,7 @@ import {
       navigation.navigate('RoverPhoto');
     }
     const data=()=>{
-      console.log("data",value);
+      console.log("datas",value);
       navigation.navigate('RoverData'); 
     }
 
@@ -111,7 +103,8 @@ import {
       <View style={styles.container}>
         <View style={styles.body}>
             <View style={{flexDirection:"row",justifyContent:"center"}}>
-                <Text style={{color:"#0B3D91", }}>{dayPic.title}</Text>
+                <Text style={{color:"#0B3D91",fontWeight:"bold" }}>{"Title: "}</Text>
+                <Text style={{color:"#0B3D91", }}>{dayPic.title?dayPic.title:"Not Available"}</Text>
                 <IconButton 
                     iconColor="#0B3D91" 
                     style={{bottom:15}} 
@@ -127,17 +120,23 @@ import {
             style={{ flex: 0.5, justifyContent: "center" }}
             ></ImageBackground>
             <View style={{paddingTop:20, flexDirection:"row", justifyContent:"space-around"}}>
-                <Text style={{color:"#0B3D91", textAlign:"center"}}>{dayPic.copyright}</Text>
-                <Text style={{color:"#0B3D91", textAlign:"center"}}>{dayPic.date}</Text>
+                <View style={{flexDirection:"row"}}>
+                    <Text style={{color:"#0B3D91",fontWeight:"bold" }}>{"Copyright: "}</Text>
+                    <Text style={{color:"#0B3D91", }}>{dayPic.copyright? dayPic.copyright:"Public"}</Text>
+                </View>
+                <View style={{flexDirection:"row"}}>
+                    <Text style={{color:"#0B3D91",fontWeight:"bold" }}>{"Date: "}</Text>
+                    <Text style={{color:"#0B3D91", }}>{dayPic.date?dayPic.date:"Not Available"}</Text>
+                </View>
             </View>
         </View>
   
         <View style={styles.footer}>
-          <NavButtons navigation={navigation} value={value} setValue={setValue}></NavButtons>        
+          <NavButtons navigation={navigation} value={"home"} setValue={setValue}></NavButtons>        
         </View>
         <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-          <Text>{dayPic.description}</Text>
+          <Text style={{fontSize:18}}>{dayPic.explanation?dayPic.explanation:"Not Available"}</Text>
         </Modal>
       </Portal>
       </View>

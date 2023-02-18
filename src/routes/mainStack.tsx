@@ -5,60 +5,9 @@ import {Modal,Portal,Provider, Switch,Button, SegmentedButtons,Snackbar ,IconBut
 import Home from "../screens/home";
 import RoverData from "../screens/roverData";
 import RoverPhoto from "../screens/roverPhoto";
-import {
-    StyleSheet,
-    Text,
-    View,
-    Image,
-    ImageBackground,
-    
-  } from "react-native";
-  import React, { useState, useEffect } from "react";
-const screens = {
-    Home: {
-      screen: Home,
-    },
-    RoverPhoto: {
-        screen: RoverPhoto,
-      },
-    RoverData: {
-      screen: RoverData,
-    },
-  };
-
-  const headerOptions={
-    title: 'Home',
-    headerTintColor: '#fff',
-    headerStyle: {
-        backgroundColor: '#f4511e',
-      },
-    headerTitleStyle: {
-        fontWeight: 'bold',
-        color:"#0B3D91", 
-        textAlign:"center",
-      },
-
-  }
+import {Text,View} from "react-native";
 
   const headerLogo=(navigation,routes)=>{
-
-    return(
-        <View style={{flexDirection:"row"}}>
-
-            <IconButton 
-            iconColor="#0B3D91" 
-            style={{}} 
-            icon="rocket-launch-outline" 
-            selected size={24} 
-            onPress={()=>{navigation.navigate('Home')}}
-            />
-            <Text style={{color:"#0B3D91",fontWeight:"bold",paddingTop:20}}>Home</Text>
-        </View>
-    );
-  }
-
-
-  const headerLogo2=(navigation,routes)=>{
     const buttonTitle="Home";
     return(
         <View style={{}}>
@@ -87,26 +36,26 @@ const mainStack=()=> {
     
     return (
         <NavigationContainer>
-            <Stack.Navigator>
+            <Stack.Navigator initialRouteName="Home">
                 <Stack.Screen 
                 name="Home" 
                 component={Home} 
                 options={({ navigation, route }) =>({
-                    headerTitle: (props) => headerLogo2(navigation, route),
+                    headerTitle: (props) => headerLogo(navigation, route),
                     headerStyle: {backgroundColor: '#F5F5F5',},
                 })}/>
                 <Stack.Screen 
                 name="RoverPhoto" 
                 component={RoverPhoto}
                 options={({ navigation, route }) =>({
-                    headerTitle: (props) => headerLogo2(navigation, route),
+                    headerTitle: (props) => headerLogo(navigation, route),
                     headerLeft: ()=> null,
                 })} />
                 <Stack.Screen 
                 name="RoverData" 
                 component={RoverData}
                 options={({ navigation, route }) =>({
-                    headerTitle: (props) => headerLogo2(navigation, route),
+                    headerTitle: (props) => headerLogo(navigation, route),
                     headerLeft: ()=> null,
                 })} />
             </Stack.Navigator>

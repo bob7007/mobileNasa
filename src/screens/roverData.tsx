@@ -13,7 +13,7 @@ import {
   import {styles} from "../screens/commonStyles"; 
 
   const RoverData=({ navigation })=>{
-    //const [value, setValue] = React.useState('');
+    const [value, setValue] = React.useState('');
 
     return(
         <View style={styles.container}>
@@ -22,7 +22,7 @@ import {
         </View>
 
         <View style={styles.footer}>
-            <NavButtons navigation={navigation} value={value} setValue={setValue}></NavButtons>        
+            <NavButtons navigation={navigation} value={"telemetrics"} setValue={setValue}></NavButtons>        
         </View>
     </View>
     );

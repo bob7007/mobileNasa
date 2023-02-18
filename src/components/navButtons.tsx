@@ -9,6 +9,7 @@ interface buttonProps{
 }
 
 export const NavButtons:React.FC<buttonProps> = ({navigation,value="home",setValue})=>{
+    console.log("navxx",navigation);
     const gallery=()=>{
         console.log("test",value);
         navigation.navigate('RoverPhoto');

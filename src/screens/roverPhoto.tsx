@@ -25,7 +25,7 @@ import {
         </View>
 
         <View style={styles.footer}>
-        <NavButtons navigation={navigation} value={value} setValue={setValue}></NavButtons>        
+        <NavButtons navigation={navigation} value={"gallery"} setValue={setValue}></NavButtons>        
         </View>
     </View>
     );
