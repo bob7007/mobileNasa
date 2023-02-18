@@ -10,9 +10,10 @@ import {
   import React, { useState, useEffect } from "react";
   import axios from "axios";
   import {Modal,Portal,Provider, Switch,Button, SegmentedButtons,Snackbar ,IconButton    } from 'react-native-paper';
- 
-
-  const home=({ navigation })=> {
+  import {NavButtons} from "../components/navButtons";
+  import {styles} from "../screens/commonStyles";
+  const Home=({ navigation })=> {
+    const [value, setValue] = React.useState('');
     const [roverData, setRoverData] = useState([]);
     const [curiosity, setCuriosity] = useState([]);
     const [opportunity, setOpportunity] = useState([]);
@@ -43,9 +44,18 @@ import {
   
     useEffect(() => {
       //getDailyPic();
+      
       setDayPic(testUrl);
 
     }, []);
+
+  
+    useEffect(() => {
+        console.log("nav: ",value);
+  
+      }, [navigation]);
+
+
   
     const getDailyPic = ()=>{
       axios
@@ -81,7 +91,7 @@ import {
     const image = {
       uri: dayPic.hdurl,
     };
-    const [value, setValue] = React.useState('');
+    
 
     const gallery=()=>{
       console.log("test",value);
@@ -99,52 +109,31 @@ import {
     const containerStyle = {backgroundColor: 'white', padding: 20};
     return (
       <View style={styles.container}>
-        <View style={{backgroundColor:"#EDEDED", flex: 8, justifyContent: "center" }}>
-        <View style={{flexDirection:"row",justifyContent:"center"}}>
-          <Text style={{color:"#0B3D91", }}>{dayPic.title}</Text>
-          <IconButton iconColor="#0B3D91" style={{bottom:15}} icon="information-outline" selected size={24} onPress={showModal} />
-        </View>
+        <View style={styles.body}>
+            <View style={{flexDirection:"row",justifyContent:"center"}}>
+                <Text style={{color:"#0B3D91", }}>{dayPic.title}</Text>
+                <IconButton 
+                    iconColor="#0B3D91" 
+                    style={{bottom:15}} 
+                    icon="information-outline" 
+                    selected size={24} 
+                    onPress={showModal} />
+            </View>
 
-        <ImageBackground
-          //source={roverData.photos[1].img_src}
-          source={image}
-          resizeMode="cover"
-          style={{ flex: 0.5, justifyContent: "center" }}
-        ></ImageBackground>
-        <View style={{paddingTop:20, flexDirection:"row", justifyContent:"space-around"}}>
-          <Text style={{color:"#0B3D91", textAlign:"center"}}>{dayPic.copyright}</Text>
-          <Text style={{color:"#0B3D91", textAlign:"center"}}>{dayPic.date}</Text>
-        </View>
-        
+            <ImageBackground
+            //source={roverData.photos[1].img_src}
+            source={image}
+            resizeMode="cover"
+            style={{ flex: 0.5, justifyContent: "center" }}
+            ></ImageBackground>
+            <View style={{paddingTop:20, flexDirection:"row", justifyContent:"space-around"}}>
+                <Text style={{color:"#0B3D91", textAlign:"center"}}>{dayPic.copyright}</Text>
+                <Text style={{color:"#0B3D91", textAlign:"center"}}>{dayPic.date}</Text>
+            </View>
         </View>
   
         <View style={styles.footer}>
-        
-          <View style={styles.buttonContainer}>
-            <Text style={styles.buttonContainerTitle}>Rover Datax</Text>
-            <SegmentedButtons
-              style={styles.buttonStyle}
-              value={value}
-              onValueChange={setValue}
-              buttons={[
-                {
-                  value: 'gallery',
-                  label: 'Gallery',
-                  icon:"view-gallery-outline",
-                  onPress:gallery,
-                  //showSelectedCheck:value==="gallery"?true:false,
-                },
-                {
-                  value: 'telemetrics',
-                  label: 'Telemetrics',
-                  icon:"file-table-outline",
-                  onPress:data,
-                  //showSelectedCheck:value==="telemetrics"?true:false,
-                },
-              ]}
-            />
-          </View>
-          
+          <NavButtons navigation={navigation} value={value} setValue={setValue}></NavButtons>        
         </View>
         <Portal>
         <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
@@ -154,43 +143,7 @@ import {
       </View>
     );
   }
+  //backgroundColor:"#EDEDED", 
+
   
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      //backgroundColor:"red"
-    },
-    footer:{
-      backgroundColor:"#EDEDED",
-      justifyContent:"center",
-      alignContent:"stretch",
-      flex: 2,
-    },
-    buttonContainer:{
-      //flexDirection:"row",
-      //justifyContent:"center",
-      //backgroundColor:"#EDEDED",
-      
-      paddingTop:5,
-      flex: 1,
-      width:"80%",
-      alignSelf:"center",
-    },
-    buttonContainerTitle:{
-      paddingBottom:5,
-      fontSize:14,
-      fontWeight:"bold",
-      textAlign:"center",
-      fontStyle:"italic",
-      color:"#0B3D91"
-    },
-    buttonStyle:{
-      //color:"#0B3D91",
-      //borderColor:"#0B3D91",
-      //borderWidth:3,
-      //borderRadius:10
-    }, 
-  
-  });
-  
-  export default home
+  export default Home

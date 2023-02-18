@@ -9,15 +9,24 @@ import {
   import React, { useState, useEffect } from "react";
   import axios from "axios";
   import {Modal,Portal,Provider, Switch,Button, SegmentedButtons,Snackbar ,IconButton    } from 'react-native-paper';
- 
+  import {NavButtons} from "../components/navButtons";
+  import {styles} from "../screens/commonStyles"; 
 
-  const roverData=()=>{
-
+  const RoverData=({ navigation })=>{
+    //const [value, setValue] = React.useState('');
 
     return(
-        <Text style={{textAlign:"center"}}>rover data</Text>
+        <View style={styles.container}>
+        <View style={styles.body}>
+
+        </View>
+
+        <View style={styles.footer}>
+            <NavButtons navigation={navigation} value={value} setValue={setValue}></NavButtons>        
+        </View>
+    </View>
     );
 
   }
 
-  export default roverData
+  export default RoverData
