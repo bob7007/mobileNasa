@@ -3,16 +3,15 @@ import {
     Text,
     View,
     Image,
-    ImageBackground,
     TouchableOpacity,
     FlatList,
-    Dimensions,
-    PixelRatio,
+    Dimensions
   } from "react-native";
   //import { WebView } from 'react-native-webview';
+  import { Dropdown } from 'react-native-element-dropdown';
   import React, { useState, useEffect } from "react";
   import axios from "axios";
-  import {Modal,Portal,Provider, Switch,Button, SegmentedButtons,Snackbar ,IconButton,DataTable     } from 'react-native-paper';
+  import {HelperText,TextInput,RadioButton,Divider,Modal,Portal,Provider,Switch,Button,SegmentedButtons,Snackbar,IconButton,DataTable,Checkbox} from 'react-native-paper';
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
   import {webServiceTypes, apiAuth} from "../services/serviceType";
@@ -25,6 +24,12 @@ import {
     const [modalItem,setModalItem]=useState([]);
     const showModal = () => setModalVisible(true);
     const hideModal = () => setModalVisible(false);
+    const [drpValue,setDrpValue]=useState("curiosity");
+    const [isFocus, setIsFocus] = useState(false);
+    const [isLatest, setIsLatest] = useState(true);
+    const [dateType, setDateType] = useState('earth');
+    const [marsDate, setMarsDate] = useState("1000");
+    const [earthDate, setEarthDate] = useState("");
 
 
     const getDefaultRoverPhoto = () => {
@@ -38,6 +43,19 @@ import {
             console.log(err);
           });
       };
+
+      const getRoverPhoto = (url:string) => {
+          axios
+            .get(url)
+            .then((response) => {
+              isLatest?
+              setRoverPhoto(response.data.latest_photos):
+              setRoverPhoto(response.data.photos);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+        };
 
     useEffect(()=>{
         getDefaultRoverPhoto();
@@ -68,13 +86,120 @@ import {
         );
       };
     
-      //console.log("data: ",roverPhoto);
+      const roverOptions = [
+        { label: 'Curiosity', value: 'curiosity' },
+        { label: 'Opportunity', value: 'opportunity' },
+        { label: 'Spirit', value: 'spirit' },
+        { label: 'Perseverance', value: 'perseverance' },
+      ];
+
+
+
+      const marsDateHasErrors = () => {
+        let error = false;
+        error = !(/^\d+$/.test(marsDate));
+        if(!error&&marsDate==="0"||!error&&marsDate.charAt(0)==="0"){
+          error=true;
+        }
+        return error;
+      };
+
+      const search=()=>{ 
+        let date = dateType==="mars"?marsDate:earthDate;
+        let url = roverPhotoURl(isLatest,drpValue,dateType,date);
+        console.log("xxx",url);
+        //getRoverPhoto(url);
+      }
+
 
     return(
     <View style={styles.container}>
         <View style={styles.body}>
-          <View style={{flex:1}}>
-              
+          <View style={{flex:2,paddingTop:30}}>
+            <View style={{paddingBottom:10, flexDirection:"row",justifyContent:"space-between",flex:2}}>
+              <View style={{flex:1}}>
+                <Dropdown
+                  //selectedTextStyle={styles.selectedTextStyle}
+                  //iconStyle={styles.iconStyle}
+                  style={[styles2.dropdown,isFocus && { borderColor: 'red' }]}
+                  placeholderStyle={styles2.placeholderStyle}
+                  selectedTextStyle={styles2.placeholderStyle}
+                  iconColor={"black"}
+                  itemTextStyle={[styles2.placeholderStyle]}
+                  containerStyle={[styles2.dropDownContainerStyle]}
+                  data={roverOptions}
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={"Curiosity"}
+                  activeColor='inherit'
+                  value={drpValue}
+                  onFocus={() => setIsFocus(true)}
+                  onBlur={() => setIsFocus(false)}
+                  onChange={item => {
+                    console.log(item);
+                    setDrpValue(item.value);
+                    setIsFocus(false);
+                  }}
+                />           
+                <View style={{flexDirection:"row"}}>
+                    <Checkbox
+                      status={isLatest ? 'checked' : 'unchecked'}
+                      onPress={() => {
+                        setIsLatest(!isLatest);
+                      }}
+                    />
+                    <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Latest Pictures</Text>
+                </View>
+
+                  <RadioButton.Group onValueChange={newDate => setDateType(newDate)} value={dateType}>
+                  {!isLatest?
+                  <View style={{flexDirection:"column"}}>
+                    <View style={{flexDirection:"row"}}>
+                      <RadioButton value="earth" />
+                      <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Earth Date</Text>
+                    </View>
+                    <View style={{flexDirection:"row",bottom:5}}>
+                      <RadioButton value="mars" />
+                      <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Mars Date</Text>
+                    </View>
+                  </View>
+                  :<></>
+                }
+                </RadioButton.Group>
+
+              </View>
+              <View style={{flex:1}}>
+              <Button 
+                style={{width:"100%",borderRadius: 8}}
+                icon="magnify" 
+                mode="outlined" 
+                buttonColor='#0B3D91'
+                textColor='white'
+                onPress={search}>
+                {"Search"}
+              </Button>
+            
+                {dateType==="mars"&&!isLatest?
+              <View>
+                <TextInput
+                  mode="outlined"
+                  outlineColor="black"
+                  label="Mars Date - (Sol)"
+                  value={marsDate}
+                  onChangeText={sol => setMarsDate(sol)}
+                /> 
+                <HelperText type="error" visible={marsDateHasErrors()}>
+                  Mars Date must be a number.
+                </HelperText>
+              </View>
+              :<></>
+              }
+
+              </View> 
+            </View>
+           
+
           </View>
           <View style={{flex:7}}>
             <FlatList
@@ -165,5 +290,25 @@ import {
     },
     itemText: {
       color: '#fff',
+    },
+    dropdown: {
+      backgroundColor:"#F5F5F5",
+      height: 43,
+      width:"100%",
+      borderColor: "black",
+      borderWidth: 1,
+      borderRadius: 8,
+      paddingHorizontal: 10,
+      color: "black",
+    },
+    placeholderStyle: {
+      //...fontStyle.book14,
+      color: "black",
+    },
+    dropDownContainerStyle: {
+      color:"black",
+      borderColor: "black",
+      borderWidth: 0.5,
+      borderRadius: 4,
     },
   });
