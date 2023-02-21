@@ -1,6 +1,5 @@
 import {View, StyleSheet} from "react-native";
-import {SegmentedButtons} from 'react-native-paper';
- 
+import {SegmentedButtons} from 'react-native-paper'; 
 
 interface buttonProps{
     navigation:any;
@@ -9,13 +8,13 @@ interface buttonProps{
 }
 
 export const NavButtons:React.FC<buttonProps> = ({navigation,value="home",setValue})=>{
-    console.log("navxx",navigation);
+    
     const gallery=()=>{
         console.log("test",value);
         navigation.navigate('RoverPhoto');
       }
-      const data=()=>{
-        console.log("data",value);
+      const telemetrics=()=>{
+        
         navigation.navigate('RoverData'); 
       }
 
@@ -51,7 +50,7 @@ export const NavButtons:React.FC<buttonProps> = ({navigation,value="home",setVal
               value: 'telemetrics',
               label: 'Telemetrics',
               icon:"file-table-outline",
-              onPress:data,
+              onPress:telemetrics,
               //showSelectedCheck:value==="telemetrics"?true:false,
             },
           ]}

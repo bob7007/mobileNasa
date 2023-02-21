@@ -35,6 +35,11 @@ export const styles = StyleSheet.create({
       //borderColor:"#0B3D91",
       //borderWidth:3,
       //borderRadius:10
-    }, 
+    },
+    modalContainer:{
+      backgroundColor: '#EDEDED',
+      padding: 20,
+      flex:1
+    } 
   
   });
