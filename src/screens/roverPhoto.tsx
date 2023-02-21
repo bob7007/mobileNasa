@@ -16,26 +16,23 @@ import {
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
   import {webServiceTypes, apiAuth} from "../services/serviceType";
+  import {roverPhotoURl} from "../utility"
 
   const RoverPhoto=({ navigation })=>{
     const [value, setValue] = React.useState('');
-    const [curiosity, setCuriosity] = useState([]);
-    const [opportunity, setOpportunity] = useState([]);
-    const [spirit, setSpirit] = useState([]);
-    const [perseverance, setPerseverance] = useState([]);
+    const [roverPhoto, setRoverPhoto] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalItem,setModalItem]=useState([]);
     const showModal = () => setModalVisible(true);
     const hideModal = () => setModalVisible(false);
 
 
-    const getPerseveranceData = () => {
+    const getDefaultRoverPhoto = () => {
+      let url = roverPhotoURl(true,"curiosity");
         axios
-          .get(webServiceTypes.getPerseverancePhotos.urlDefault)
+          .get(url)
           .then((response) => {
-            console.log(response.data);
-            setPerseverance(response.data);
-    
+            setRoverPhoto(response.data.latest_photos);
           })
           .catch((err) => {
             console.log(err);
@@ -43,16 +40,12 @@ import {
       };
 
     useEffect(()=>{
-        //setPerseverance(props.route.params.defaultPhotos.latest_photos);
-        //console.log("perseverance: ",props.route.params.defaultPhotos.latest_photos);
-        getPerseveranceData();
+        getDefaultRoverPhoto();
         console.log(webServiceTypes.getPerseverancePhotos.urlDefault);
 
     },[]);
 
     const handleClick = (item) => {
-      //console.log(event,event.currentTarget.id);
-
       setModalItem(item);
       setModalVisible(true);
       console.log(item,modalItem);
@@ -75,48 +68,52 @@ import {
         );
       };
     
-      console.log("data: ",perseverance);
+      //console.log("data: ",roverPhoto);
 
     return(
     <View style={styles.container}>
         <View style={styles.body}>
-        <FlatList
-            data={perseverance.latest_photos}
-            style={styles2.container}
-            renderItem={renderItem}
-            numColumns={3}
-          />
+          <View style={{flex:1}}>
+              
+          </View>
+          <View style={{flex:7}}>
+            <FlatList
+                data={roverPhoto}
+                style={styles2.container}
+                renderItem={renderItem}
+                numColumns={3}
+              />
+          </View>
         </View>
 
         <View style={styles.footer}>
         <NavButtons navigation={navigation} value={"gallery"} setValue={setValue}></NavButtons>        
         </View>
+
         <Portal>
         <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}>
-          
-          <Image source={{uri: modalItem.img_src}} resizeMode="contain" style={{flex:1,width: "100%", height: "100%"}}/>
-
+          <Image source={{uri: modalItem.img_src?modalItem.img_src:""}} resizeMode="contain" style={{flex:1,width: "100%", height: "100%"}}/>
           <View style={{flex:1,width:"80%",paddingTop:50 }}>
           <DataTable >
             <DataTable.Row>
               <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Rover:</DataTable.Cell>
-              <DataTable.Cell>{modalItem.rover.name}</DataTable.Cell>
+              <DataTable.Cell>{modalItem?.rover?.name?modalItem.rover.name:""}</DataTable.Cell>
             </DataTable.Row>
             <DataTable.Row>
               <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Status:</DataTable.Cell>
-              <DataTable.Cell>{modalItem.rover.status}</DataTable.Cell>
+              <DataTable.Cell>{modalItem?.rover?.status?modalItem.rover.status:""}</DataTable.Cell>
             </DataTable.Row>
             <DataTable.Row>
               <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Landing Date:</DataTable.Cell>
-              <DataTable.Cell>{modalItem.rover.landing_date}</DataTable.Cell>
+              <DataTable.Cell>{modalItem?.rover?.landing_date?modalItem.rover.landing_date:""}</DataTable.Cell>
             </DataTable.Row>
             <DataTable.Row>
               <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Launch Date:</DataTable.Cell>
-              <DataTable.Cell>{modalItem.rover.launch_date}</DataTable.Cell>
+              <DataTable.Cell>{modalItem?.rover?.launch_date?modalItem.rover.launch_date:""}</DataTable.Cell>
             </DataTable.Row>
             <DataTable.Row>
               <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Camera:</DataTable.Cell>
-              <DataTable.Cell>{modalItem.camera.full_name}</DataTable.Cell>
+              <DataTable.Cell>{modalItem?.camera?.full_name?modalItem.camera.full_name:""}</DataTable.Cell>
             </DataTable.Row>
           </DataTable>		
           </View>

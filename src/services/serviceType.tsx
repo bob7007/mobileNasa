@@ -6,26 +6,26 @@ const webServiceTypes={
 
     getCuriosityPhotos:{
         name:"curiosity",
-        urlDefault:`${baseUrl}${serviceType}curiosity/latest_photos?page=1&api_key=${apiAuth}`,
-        urlBase:`${baseUrl}${serviceType}curiosity/`,
+        urlDefault:`${baseUrl}${serviceType}curiosity/latest_photos?api_key=${apiAuth}`,
+        urlBase:`${baseUrl}${serviceType}curiosity`,
         type:"GET",
     },
     getOpportunityPhotos:{
-        name:"curiosity",
-        urlDefault:`${baseUrl}${serviceType}opportunity/latest_photos?page=1&api_key=${apiAuth}`,
-        urlBase:`${baseUrl}${serviceType}opportunity/`,
+        name:"opportunity",
+        urlDefault:`${baseUrl}${serviceType}opportunity/latest_photos?api_key=${apiAuth}`,
+        urlBase:`${baseUrl}${serviceType}opportunity`,
         type:"GET",
     },
     getSpiritPhotos:{
-        name:"curiosity",
-        urlDefault:`${baseUrl}${serviceType}spirit/latest_photos?page=1&api_key=${apiAuth}`,
-        urlBase:`${baseUrl}${serviceType}spirit/`,
+        name:"spirit",
+        urlDefault:`${baseUrl}${serviceType}spirit/latest_photos?api_key=${apiAuth}`,
+        urlBase:`${baseUrl}${serviceType}spirit`,
         type:"GET",
     },
     getPerseverancePhotos:{
-        name:"curiosity",
-        urlDefault:`${baseUrl}${serviceType}perseverance/latest_photos?page=1&api_key=${apiAuth}`,
-        urlBase:`${baseUrl}${serviceType}perseverance/`,
+        name:"perseverance",
+        urlDefault:`${baseUrl}${serviceType}perseverance/latest_photos?api_key=${apiAuth}`,
+        urlBase:`${baseUrl}${serviceType}perseverance`,
         type:"GET",
     },
     getPictureOfDay:{
