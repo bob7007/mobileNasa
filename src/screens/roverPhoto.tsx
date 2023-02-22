@@ -5,7 +5,6 @@ import {
     Image,
     TouchableOpacity,
     FlatList,
-    Dimensions
   } from "react-native";
   //import { WebView } from 'react-native-webview';
   import { Dropdown } from 'react-native-element-dropdown';
@@ -14,8 +13,9 @@ import {
   import {HelperText,TextInput,RadioButton,Divider,Modal,Portal,Provider,Switch,Button,SegmentedButtons,Snackbar,IconButton,DataTable,Checkbox} from 'react-native-paper';
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
-  import {webServiceTypes, apiAuth} from "../services/serviceType";
   import {roverPhotoURl} from "../utility"
+  import DateTimePicker from '@react-native-community/datetimepicker';
+
 
   const RoverPhoto=({ navigation })=>{
     const [value, setValue] = React.useState('');
@@ -29,8 +29,9 @@ import {
     const [isLatest, setIsLatest] = useState(true);
     const [dateType, setDateType] = useState('earth');
     const [marsDate, setMarsDate] = useState("1000");
-    const [earthDate, setEarthDate] = useState("");
-
+    const [earthDate, setEarthDate] = useState(new Date());
+    //const [date, setDate] = useState(new Date());
+    const [showDate,setShowDate] = useState(false);
 
     const getDefaultRoverPhoto = () => {
       let url = roverPhotoURl(true,"curiosity");
@@ -59,11 +60,9 @@ import {
 
     useEffect(()=>{
         getDefaultRoverPhoto();
-        console.log(webServiceTypes.getPerseverancePhotos.urlDefault);
-
     },[]);
 
-    const handleClick = (item) => {
+    const selectPicture = (item:any) => {
       setModalItem(item);
       setModalVisible(true);
       console.log(item,modalItem);
@@ -72,13 +71,13 @@ import {
     
       const renderItem = ({ item, index }) => {
         if (item.empty === true) {
-          return <View style={[styles2.item, styles2.itemInvisible]} />;
+          return <View style={[styles.galleryItem, styles.galleryItemInvisible]} />;
         }
         return (
           <View
-            style={styles2.item}
+            style={styles.galleryItem}
           >
-            <TouchableOpacity onPress={()=>{handleClick(item)}}>
+            <TouchableOpacity onPress={()=>{selectPicture(item)}}>
               <Image source={{uri: item.img_src}} style={{width: 120, height: 120}} />
             </TouchableOpacity>
             
@@ -104,46 +103,56 @@ import {
         return error;
       };
 
-      const search=()=>{ 
-        let date = dateType==="mars"?marsDate:earthDate;
+      const search=()=>{
+        
+        let date = dateType==="mars"?marsDate:
+        earthDate.getFullYear()+'-'+((earthDate.getMonth() > 8) ? (earthDate.getMonth() + 1) : ('0' + (earthDate.getMonth() + 1)))+'-'+ ((earthDate.getDate() > 9) ? earthDate.getDate() : ('0' + earthDate.getDate()));
         let url = roverPhotoURl(isLatest,drpValue,dateType,date);
-        console.log("xxx",url);
-        //getRoverPhoto(url);
+        console.log("url",url);
+
+        getRoverPhoto(url);
       }
 
+      const onChange = (event:any, selectedDate:any) => {
+        const currentDate = selectedDate;
+        setShowDate(false);
+        setEarthDate(currentDate);
+      };
+     
 
     return(
     <View style={styles.container}>
         <View style={styles.body}>
-          <View style={{flex:2,paddingTop:30}}>
+          <View  style={isLatest?{flex:1}:{flex:2.5}}>
             <View style={{paddingBottom:10, flexDirection:"row",justifyContent:"space-between",flex:2}}>
-              <View style={{flex:1}}>
+              <View style={{flex:1,padding:20}}>
                 <Dropdown
                   //selectedTextStyle={styles.selectedTextStyle}
                   //iconStyle={styles.iconStyle}
-                  style={[styles2.dropdown,isFocus && { borderColor: 'red' }]}
-                  placeholderStyle={styles2.placeholderStyle}
-                  selectedTextStyle={styles2.placeholderStyle}
+                  style={[styles.dropdown,isFocus && { borderColor: '#fc3d21' }]}
+                  placeholderStyle={styles.drpPlaceholderStyle}
+                  selectedTextStyle={styles.drpSelectedStyle}
                   iconColor={"black"}
-                  itemTextStyle={[styles2.placeholderStyle]}
-                  containerStyle={[styles2.dropDownContainerStyle]}
+                  itemTextStyle={[styles.drpPlaceholderStyle]}
+                  containerStyle={[styles.dropDownContainerStyle]}
+                  activeColor="#F5F5F5"
                   data={roverOptions}
                   maxHeight={300}
                   labelField="label"
                   valueField="value"
                   placeholder={"Curiosity"}
-                  activeColor='inherit'
+                  
                   value={drpValue}
                   onFocus={() => setIsFocus(true)}
                   onBlur={() => setIsFocus(false)}
                   onChange={item => {
-                    console.log(item);
                     setDrpValue(item.value);
                     setIsFocus(false);
                   }}
                 />           
                 <View style={{flexDirection:"row"}}>
                     <Checkbox
+                      color="#0B3D91"
                       status={isLatest ? 'checked' : 'unchecked'}
                       onPress={() => {
                         setIsLatest(!isLatest);
@@ -156,11 +165,11 @@ import {
                   {!isLatest?
                   <View style={{flexDirection:"column"}}>
                     <View style={{flexDirection:"row"}}>
-                      <RadioButton value="earth" />
+                      <RadioButton color="#0B3D91" value="earth" />
                       <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Earth Date</Text>
                     </View>
                     <View style={{flexDirection:"row",bottom:5}}>
-                      <RadioButton value="mars" />
+                      <RadioButton color="#0B3D91" value="mars" />
                       <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Mars Date</Text>
                     </View>
                   </View>
@@ -169,23 +178,24 @@ import {
                 </RadioButton.Group>
 
               </View>
-              <View style={{flex:1}}>
+              <View style={{flex:1,padding:20}}>
               <Button 
-                style={{width:"100%",borderRadius: 8}}
+                style={{width:"100%",borderRadius: 8,minHeight:45}}
                 icon="magnify" 
                 mode="outlined" 
                 buttonColor='#0B3D91'
                 textColor='white'
                 onPress={search}>
-                {"Search"}
-              </Button>
+                Search
+              </Button>       
             
                 {dateType==="mars"&&!isLatest?
-              <View>
+              <View style={{paddingTop:40}}>
                 <TextInput
                   mode="outlined"
-                  outlineColor="black"
-                  label="Mars Date - (Sol)"
+                  outlineColor="#0B3D91"
+                  outlineStyle={{borderWidth:2,borderRadius: 8}}
+                  label="Mars Date - Sol"
                   value={marsDate}
                   onChangeText={sol => setMarsDate(sol)}
                 /> 
@@ -196,18 +206,54 @@ import {
               :<></>
               }
 
+              {dateType==="earth"&&!isLatest?
+
+              <View style={{paddingTop:50}}>
+              <Button 
+                style={{width:"100%",borderRadius: 8}}
+                icon="calendar-range" 
+                mode="outlined" 
+                buttonColor='#0B3D91'
+                textColor='white'
+                onPress={()=>{
+                  setShowDate(true);
+                }}>
+                {"Enter Date"}
+              </Button>
+              </View>
+              :<></>
+              }
+
+              {showDate?
+              <View>
+              <DateTimePicker
+                value={earthDate}
+                mode={"date"}
+                maximumDate={new Date()}
+                onChange={onChange}
+              />
+              </View>
+              :<></>
+              }
               </View> 
             </View>
            
 
           </View>
           <View style={{flex:7}}>
+            {roverPhoto.length>0?
+            
             <FlatList
                 data={roverPhoto}
-                style={styles2.container}
+                style={styles.galleryContainer}
                 renderItem={renderItem}
                 numColumns={3}
               />
+              :<View style={{paddingTop:100}}>
+                <Text style={{padding:30, fontSize:20, textAlign:"center",backgroundColor:"white"}}>No Data Available</Text>
+              </View>
+          
+          }
           </View>
         </View>
 
@@ -218,7 +264,7 @@ import {
         <Portal>
         <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}>
           <Image source={{uri: modalItem.img_src?modalItem.img_src:""}} resizeMode="contain" style={{flex:1,width: "100%", height: "100%"}}/>
-          <View style={{flex:1,width:"80%",paddingTop:50 }}>
+          <View style={{flex:1,width:"100%",paddingTop:50 }}>
           <DataTable >
             <DataTable.Row>
               <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Rover:</DataTable.Cell>
@@ -270,45 +316,3 @@ import {
   }
 
   export default RoverPhoto;
-
-
-  const styles2 = StyleSheet.create({
-    container: {
-      flex: 1,
-      marginVertical: 20,
-    },
-    item: {
-      //backgroundColor: '#4D243D',
-      alignItems: 'center',
-      justifyContent: 'center',
-      flex: 1,
-      margin: 1,
-      height: Dimensions.get('window').width / 3, // approximate a square
-    },
-    itemInvisible: {
-      backgroundColor: 'transparent',
-    },
-    itemText: {
-      color: '#fff',
-    },
-    dropdown: {
-      backgroundColor:"#F5F5F5",
-      height: 43,
-      width:"100%",
-      borderColor: "black",
-      borderWidth: 1,
-      borderRadius: 8,
-      paddingHorizontal: 10,
-      color: "black",
-    },
-    placeholderStyle: {
-      //...fontStyle.book14,
-      color: "black",
-    },
-    dropDownContainerStyle: {
-      color:"black",
-      borderColor: "black",
-      borderWidth: 0.5,
-      borderRadius: 4,
-    },
-  });
