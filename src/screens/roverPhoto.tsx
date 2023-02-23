@@ -5,19 +5,23 @@ import {
     Image,
     TouchableOpacity,
     FlatList,
+    SafeAreaView,
   } from "react-native";
-  //import { WebView } from 'react-native-webview';
+  import { WebView } from 'react-native-webview';
   import { Dropdown } from 'react-native-element-dropdown';
-  import React, { useState, useEffect } from "react";
+  import React, { useState, useEffect,useRef } from "react";
   import axios from "axios";
   import {HelperText,TextInput,RadioButton,Divider,Modal,Portal,Provider,Switch,Button,SegmentedButtons,Snackbar,IconButton,DataTable,Checkbox} from 'react-native-paper';
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
   import {roverPhotoURl} from "../utility"
   import DateTimePicker from '@react-native-community/datetimepicker';
-
+  import { useNavigation } from "@react-navigation/native";
 
   const RoverPhoto=({ navigation })=>{
+    const webviewRef = useRef(null);
+    const nav = navigation;
+    const navi = useNavigation();
     const [value, setValue] = React.useState('');
     const [roverPhoto, setRoverPhoto] = useState([]);
     const [modalVisible, setModalVisible] = useState(false);
@@ -32,6 +36,7 @@ import {
     const [earthDate, setEarthDate] = useState(new Date());
     //const [date, setDate] = useState(new Date());
     const [showDate,setShowDate] = useState(false);
+    const [onWebView,setOnWebView] = useState(false);
 
     const getDefaultRoverPhoto = () => {
       let url = roverPhotoURl(true,"curiosity");
@@ -118,6 +123,25 @@ import {
         setShowDate(false);
         setEarthDate(currentDate);
       };
+
+      const openWebView=()=>{
+        
+            return(
+              <SafeAreaView style={{ flex: 1 }}>
+              <View>
+                <Button onPress={() => nav.goBack()}>Go Back</Button>
+                <WebView
+                source={{
+                  uri: 'https://reactnative.dev/',
+                }}
+                javaScriptEnabled
+                originWhitelist={["http://", "https://"]}
+                style={{marginTop: 20}}
+              />
+              </View>
+              </SafeAreaView>
+            );
+      }
      
 
     return(
@@ -263,49 +287,49 @@ import {
 
         <Portal>
         <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}>
-          <Image source={{uri: modalItem.img_src?modalItem.img_src:""}} resizeMode="contain" style={{flex:1,width: "100%", height: "100%"}}/>
-          <View style={{flex:1,width:"100%",paddingTop:50 }}>
-          <DataTable >
-            <DataTable.Row>
-              <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Rover:</DataTable.Cell>
-              <DataTable.Cell>{modalItem?.rover?.name?modalItem.rover.name:""}</DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row>
-              <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Status:</DataTable.Cell>
-              <DataTable.Cell>{modalItem?.rover?.status?modalItem.rover.status:""}</DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row>
-              <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Landing Date:</DataTable.Cell>
-              <DataTable.Cell>{modalItem?.rover?.landing_date?modalItem.rover.landing_date:""}</DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row>
-              <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Launch Date:</DataTable.Cell>
-              <DataTable.Cell>{modalItem?.rover?.launch_date?modalItem.rover.launch_date:""}</DataTable.Cell>
-            </DataTable.Row>
-            <DataTable.Row>
-              <DataTable.Cell textStyle={{fontWeight:"bold",color:"#0B3D91"}}>Camera:</DataTable.Cell>
-              <DataTable.Cell>{modalItem?.camera?.full_name?modalItem.camera.full_name:""}</DataTable.Cell>
-            </DataTable.Row>
-          </DataTable>		
+        <View style={{flex:1,backgroundColor:"#F5F5F5", justifyContent:"center",alignItems:"flex-end"}}>
+          <IconButton
+            icon="close-circle-outline"
+            iconColor="#0B3D91"
+            size={30}
+            onPress={hideModal}
+          />
+        </View>
+          <Image source={{uri: modalItem.img_src?modalItem.img_src:""}} resizeMode="contain" style={styles.modalImageStyle}/>
+          <Divider />
+          <View style={{flex:3,backgroundColor:"#F5F5F5", flexDirection:"row"}}>
+            <View style={{flex:1.5,}}>
+              <Text style={styles.tableItemTitle}>Rover:</Text>
+              <Text style={styles.tableItemTitleAlternate}>Status:</Text>
+              <Text style={styles.tableItemTitle}>Landing Date:</Text>
+              <Text style={styles.tableItemTitleAlternate}>Launch Date:</Text>
+              <Text style={styles.tableItemTitle}>Camera:</Text>
+            </View>
+          
+            <View style={{flex:1.5,}}>
+              <Text style={styles.tableItemValue}>{modalItem?.rover?.name?modalItem.rover.name:""}</Text>
+              <Text style={styles.tableItemValueAlternate}>{modalItem?.rover?.status?modalItem.rover.status:""}</Text>
+              <Text style={styles.tableItemValue}>{modalItem?.rover?.landing_date?modalItem.rover.landing_date:""}</Text>
+              <Text style={styles.tableItemValueAlternate}>{modalItem?.rover?.launch_date?modalItem.rover.launch_date:""}</Text>
+              <Text style={styles.tableItemValue}>{modalItem?.camera?.full_name?modalItem.camera.full_name:""}</Text>
+            </View>
           </View>
-          <View style={{flexDirection:"row"}}>
+
+          <View style={{flex:2,alignItems:"center"}}>
+            <Image style={{width: 100, height: 100}}
+             source={{uri:"https://cdn-icons-png.flaticon.com/512/5403/5403095.png"}}></Image>
+          </View>
+            
+         
+          <View style={{flex:1,backgroundColor:"#F5F5F5",justifyContent:"center"}}>
               <Button 
-                style={{width:"50%"}}
+                style={{}}
                 icon="close-circle-outline" 
                 mode="outlined" 
                 buttonColor='#0B3D91'
                 textColor='white'
                 onPress={hideModal}>
                 {"Close"}
-              </Button>
-              <Button 
-                style={{width:"50%"}}
-                icon="close-circle-outline" 
-                mode="outlined" 
-                buttonColor='#0B3D91'
-                textColor='white'
-                onPress={hideModal}>
-                {"Download"}
               </Button>
           </View>
         </Modal>

@@ -39,7 +39,7 @@ export const styles = StyleSheet.create({
     modalContainer:{
       backgroundColor: '#EDEDED',
       padding: 20,
-      flex:1
+      flex:12
     },
     galleryContainer: {
       flex: 1,
@@ -88,6 +88,35 @@ export const styles = StyleSheet.create({
       marginTop:-24,
       backgroundColor:"#EDEDED"
       
-    }, 
+    },
+    tableItemTitle:{
+      fontWeight:"bold",
+      color:"#0B3D91",
+      fontSize:16,
+    },
+    tableItemTitleAlternate:{
+      fontWeight:"bold",
+      color:"black",
+      fontSize:16,
+      backgroundColor:"#a2a6e4",
+    },
+    tableItemValue:{
+      color:"#0B3D91",
+      fontSize:16,
+      fontStyle:"italic",
+    },
+    tableItemValueAlternate:{
+      color:"black",
+      fontSize:16,
+      backgroundColor:"#a2a6e4",
+      fontStyle:"italic",
+    },
+    modalImageStyle:{
+      backgroundColor:"#F5F5F5",
+      flex:5,
+      width: "100%",
+      height: "100%",
+      marginBottom:20
+    }
   
   });

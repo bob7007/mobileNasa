@@ -1,6 +1,15 @@
 
 import {webServiceTypes, apiAuth} from "./services/serviceType";
 
+
+export const roverManifest=(
+    roverName:string,
+)=>{
+let url=`${webServiceTypes.getTelemetry.urlBase}${roverName}?api_key=${apiAuth}`;
+
+return(url);
+}
+
 export const roverPhotoURl=(
     isLatest:boolean,
     roverName:string,
@@ -11,6 +20,7 @@ export const roverPhotoURl=(
 let url ="";
 
     switch(roverName){
+
         case "curiosity":
             if(isLatest){
                 url = `${webServiceTypes.getCuriosityPhotos.urlBase}/latest_photos?api_key=${apiAuth}`;
