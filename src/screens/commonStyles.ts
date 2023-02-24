@@ -91,25 +91,27 @@ export const styles = StyleSheet.create({
     },
     tableItemTitle:{
       fontWeight:"bold",
-      color:"#0B3D91",
+      color:"black",
       fontSize:16,
     },
     tableItemTitleAlternate:{
       fontWeight:"bold",
-      color:"black",
+      color:"#F5F5F5",
       fontSize:16,
-      backgroundColor:"#a2a6e4",
+      //backgroundColor:"#a2a6e4",
+      backgroundColor:"#0B3D91",
     },
     tableItemValue:{
-      color:"#0B3D91",
-      fontSize:16,
-      fontStyle:"italic",
-    },
-    tableItemValueAlternate:{
       color:"black",
       fontSize:16,
-      backgroundColor:"#a2a6e4",
-      fontStyle:"italic",
+      //fontStyle:"italic",
+    },
+    tableItemValueAlternate:{
+      color:"#F5F5F5",
+      fontSize:16,
+      //backgroundColor:"#a2a6e4",
+      backgroundColor:"#0B3D91",
+      //fontStyle:"italic",
     },
     modalImageStyle:{
       backgroundColor:"#F5F5F5",

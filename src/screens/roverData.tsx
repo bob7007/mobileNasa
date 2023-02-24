@@ -54,7 +54,7 @@ import {
 
     const search=()=>{
       let url ="";
-      console.log("url",url);
+      url = roverManifest(drpValue);
       getTelemetry(url);
     }
 
@@ -106,25 +106,25 @@ import {
             </View>
           </View>
           <View style={{flex:2,backgroundColor:"#F5F5F5", flexDirection:"row"}}>
-          <View style={{flex:1,}}>
-              <Text style={styles.tableItemTitle}>Total Photos:</Text>
-              <Text style={styles.tableItemTitleAlternate}>Status:</Text>
-              <Text style={styles.tableItemTitle}>Max Sol:</Text>
-              <Text style={styles.tableItemTitleAlternate}>Max Earth Date</Text>
-              <Text style={styles.tableItemTitle}>Launch Date:</Text>
-              <Text style={styles.tableItemTitleAlternate}>Landing Date:</Text>
+          <View style={{flex:1}}>
+              <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Total Photos:</Text>
+              <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Status:</Text>
+              <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Max Sol:</Text>
+              <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Max Earth Date</Text>
+              <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Launch Date:</Text>
+              <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Landing Date:</Text>
             </View>
           
             <View style={{flex:1,}}>
-              <Text style={styles.tableItemValue}>{telemetry?.total_photos?telemetry.total_photos:""}</Text>
-              <Text style={styles.tableItemValueAlternate}>{telemetry?.status?telemetry.status:""}</Text>
-              <Text style={styles.tableItemValue}>{telemetry?.max_sol?telemetry.max_sol:""}</Text>
-              <Text style={styles.tableItemValueAlternate}>{telemetry?.max_date?telemetry.max_date:""}</Text>
-              <Text style={styles.tableItemValue}>{telemetry?.launch_date?telemetry.launch_date:""}</Text>
-              <Text style={styles.tableItemValueAlternate}>{telemetry?.landing_date?telemetry.landing_date:""}</Text>
+              <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.total_photos?telemetry.total_photos:""}</Text>
+              <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.status?telemetry.status:""}</Text>
+              <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.max_sol?telemetry.max_sol:""}</Text>
+              <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.max_date?telemetry.max_date:""}</Text>
+              <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.launch_date?telemetry.launch_date:""}</Text>
+              <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.landing_date?telemetry.landing_date:""}</Text>
             </View>
           </View>
-          <View style={{flex:4}}>
+          <View style={{flex:5}}>
               <DataTable data={photoData}></DataTable>
           </View>
         </View>

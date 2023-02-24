@@ -3,7 +3,7 @@ import { DataTable,List } from 'react-native-paper';
 import { Text,FlatList,View,SafeAreaView } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Dropdown } from 'react-native-element-dropdown';
-
+import {styles} from "../screens/commonStyles";
 const numberOfItemsPerPageList = [1, 3, 5];
 
 const headers = [
@@ -44,7 +44,7 @@ const dataTable: React.FC<tableProp> = ({data}) => {
         elem.key=i;
     })
 
-      const listObj=(cam:[])=>{
+      const listObj=(cam:[],key:number)=>{
         const drpData= new Array();
         type camProp={
             name: string;
@@ -64,19 +64,19 @@ const dataTable: React.FC<tableProp> = ({data}) => {
         return(<Dropdown
             //selectedTextStyle={styles.selectedTextStyle}
             //iconStyle={styles.iconStyle}
-            //style={[styles.dropdown,isFocus && { borderColor: '#fc3d21'}]}
-            //placeholderStyle={styles.drpPlaceholderStyle}
-            //selectedTextStyle={styles.drpSelectedStyle}
-            iconColor={"black"}
+            //style={{width:"100%"}}
+            placeholderStyle={key%2===0?{color:"#F5F5F5"}:{color:"black"}}
+            selectedTextStyle={key%2===0?{color:"#F5F5F5"}:{color:"black"}}
+            iconColor={key%2===0?"#F5F5F5":"black"}
             itemTextStyle={{fontSize:10}}
-            //containerStyle={[styles.dropDownContainerStyle]}
-            activeColor="#F5F5F5"
+            containerStyle={[styles.dropDownContainerStyle,{width:100}]}
+            //activeColor="red"
             data={drpData}
             maxHeight={300}
             labelField="name"
             valueField="value"
             placeholder={"Cam"}
-            //value={"Sample 7"}
+            //value={"Cam"}
             //onFocus={() => setIsFocus(true)}
             //onBlur={() => setIsFocus(false)}
             onChange={item => {
@@ -99,23 +99,23 @@ const dataTable: React.FC<tableProp> = ({data}) => {
     }, [numberOfItemsPerPage]);
 
     const tableheader = (header) => (
-    <DataTable.Title key={header.id}><Text style={{color:"black", fontSize:14, fontWeight:"bold"}}>{header.title}</Text></DataTable.Title>
+    <DataTable.Title style={{justifyContent:"space-around"}} key={header.id}><Text style={{color:"black", fontSize:14, fontWeight:"bold"}}>{header.title}</Text></DataTable.Title>
     );
 
     
     const tableRow = (item) => {
         
         return(
-        <DataTable.Row style={item.key%2===0?{backgroundColor:"#a2a6e4"}:{backgroundColor:"#EDEDED"}} key={item.key}>
-            <DataTable.Cell>{listObj(item.cameras)}</DataTable.Cell>
-            <DataTable.Cell>{item.earth_date}</DataTable.Cell>
-            <DataTable.Cell>{item.sol}</DataTable.Cell>
-            <DataTable.Cell>{item.total_photos}</DataTable.Cell>
+        <DataTable.Row style={item.key%2===0?{backgroundColor:"#0B3D91"}:{backgroundColor:"#EDEDED"}} key={item.sol}>
+            <DataTable.Cell style={{justifyContent:"space-around"}}>{listObj(item.cameras,item.key)}</DataTable.Cell>
+            <DataTable.Cell style={{justifyContent:"space-around"}}><Text style={item.key%2===0?{color:"#F5F5F5"}:{color:"black"}}>{item.earth_date}</Text></DataTable.Cell>
+            <DataTable.Cell style={{justifyContent:"space-around"}}><Text style={item.key%2===0?{color:"#F5F5F5"}:{color:"black"}}>{item.sol}</Text></DataTable.Cell>
+            <DataTable.Cell style={{justifyContent:"space-around"}}><Text style={item.key%2===0?{color:"#F5F5F5"}:{color:"black"}}>{item.total_photos}</Text></DataTable.Cell>
         </DataTable.Row>
         );}
 
     return (
-        <PaperProvider>
+        
             <DataTable>
             <DataTable.Header>
             {headers.map((header) => tableheader(header))}
@@ -138,9 +138,10 @@ const dataTable: React.FC<tableProp> = ({data}) => {
                 numberOfItemsPerPage={numberOfItemsPerPage}
                 onItemsPerPageChange={onItemsPerPageChange}
                 selectPageDropdownLabel={'Rows per page'}
+                
             />
             </DataTable>
-        </PaperProvider>
+       
     );
 };
 
