@@ -56,6 +56,7 @@ import {
       let url ="";
       url = roverManifest(drpValue);
       getTelemetry(url);
+      console.log(url);
     }
 
     const [page,setPage]=useState(1);

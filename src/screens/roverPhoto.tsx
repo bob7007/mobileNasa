@@ -17,6 +17,7 @@ import {
   import {roverPhotoURl} from "../utility"
   import DateTimePicker from '@react-native-community/datetimepicker';
   import { useNavigation } from "@react-navigation/native";
+  import hazard from "../assets/hazard.png"
 
   const RoverPhoto=({ navigation })=>{
     const webviewRef = useRef(null);
@@ -143,7 +144,6 @@ import {
             );
       }
      
-
     return(
     <View style={styles.container}>
         <View style={styles.body}>
@@ -264,7 +264,7 @@ import {
            
 
           </View>
-          <View style={{flex:7}}>
+          <View style={roverPhoto.length>0?{flex:7}:{flex:5}}>
             {roverPhoto.length>0?
             
             <FlatList
@@ -273,8 +273,13 @@ import {
                 renderItem={renderItem}
                 numColumns={3}
               />
-              :<View style={{paddingTop:100}}>
-                <Text style={{padding:30, fontSize:20, textAlign:"center",backgroundColor:"white"}}>No Data Available</Text>
+              :<View style={{padding:10,backgroundColor:"white"}}>
+                <Text style={{padding:30, fontSize:20, textAlign:"center"}}>No Data Available</Text>
+                <Image 
+                style={{width: 100, height: 100, alignSelf:"center"}}
+                source={hazard}></Image>
+                
+                <Text style={{padding:30, fontSize:20, textAlign:"center"}}>Detail Search parameters are available on the "Telemetrics" screen</Text>
               </View>
           
           }

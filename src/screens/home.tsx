@@ -9,7 +9,7 @@ import {
   } from "react-native";
   import React, { useState, useEffect } from "react";
   import axios from "axios";
-  import {Modal,Portal,Provider, Switch,Button, SegmentedButtons,Snackbar ,IconButton    } from 'react-native-paper';
+  import {Modal,Portal,Provider, Switch,Button, SegmentedButtons,Snackbar ,IconButton,Divider} from 'react-native-paper';
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
   import {webServiceTypes, apiAuth} from "../services/serviceType";
@@ -25,6 +25,8 @@ import {
     const [visible, setVisible] = React.useState(false);
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
+
+    const parchmentImg = {uri: 'https://st.depositphotos.com/1954507/2398/v/600/depositphotos_23983127-stock-illustration-old-and-vintage-paper-isolated.jpg'};
    
     const testUrl = {
       hdurl:"https://apod.nasa.gov/apod/image/2302/ABELL1060_LRGB_NASA.jpg",
@@ -59,10 +61,10 @@ import {
     return (
       <View style={styles.container}>
         <View style={styles.body}>
-            <Text style={{color:"#0B3D91",fontStyle:"italic", textAlign:"center", textDecorationLine:"underline"}}>Picture of the day</Text>
+            <Text style={{ fontSize:16,color:"#0B3D91", textAlign:"center"}}>Picture of the day!</Text>
             <View style={{flexDirection:"row",justifyContent:"center",marginBottom:-20}}>
-                <Text style={{color:"#0B3D91",fontWeight:"bold" }}>{"Title: "}</Text>
-                <Text style={{color:"#0B3D91", }}>{dayPic.title?dayPic.title:"Not Available"}</Text>
+                <Text style={{color:"#0B3D91",fontWeight:"bold",fontSize:16 }}>{"Title: "}</Text>
+                <Text style={{color:"#0B3D91",fontSize:16  }}>{dayPic.title?dayPic.title:"Not Available"}</Text>
                 <IconButton 
                     iconColor="#0B3D91" 
                     style={{bottom:15}} 
@@ -93,8 +95,21 @@ import {
           <NavButtons navigation={navigation} value={"home"} setValue={setValue}></NavButtons>        
         </View>
         <Portal>
-        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}>
-          <Text style={{fontSize:18}}>{dayPic.explanation?dayPic.explanation:"Not Available"}</Text>
+        <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}> 
+        <View style={{backgroundColor:"white", flexDirection:"row", flex:1,alignItems:"center",justifyContent:"space-between",borderColor:"#0B3D91",borderRadius:20,borderWidth:5}}>
+          <Text style={{paddingLeft:10, fontSize:18,color:"#0B3D91",fontWeight:"bold"}}>Picture Details:</Text>
+          <IconButton
+              
+              icon="close-circle-outline"
+              iconColor="#0B3D91"
+              size={30}
+              onPress={hideModal}
+            />   
+        </View>
+        <View style={{flex:8,paddingTop:30}}>
+          <Text style={{fontSize:18,textAlign: 'justify'}}>{'\t\t'}{dayPic.explanation?dayPic.explanation:"Not Available"}</Text>
+        </View>
+        <View style={{flex:2}}></View>
         </Modal>
       </Portal>
       </View>
