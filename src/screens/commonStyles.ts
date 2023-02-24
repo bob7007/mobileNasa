@@ -8,7 +8,8 @@ export const styles = StyleSheet.create({
     },
     body: {
       flex: 8,
-      justifyContent: "center"
+      justifyContent: "center",
+      padding:10,
     },
     footer:{
       backgroundColor:"#F5F5F5",

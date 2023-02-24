@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   FlatList,
   SafeAreaView,
+  ScrollView
 } from "react-native";
   //import * as React from 'react';
   import React, { useState, useEffect,useRef } from "react";
@@ -25,6 +26,8 @@ import {
     const [isFocus, setIsFocus] = useState(false);
     const [telemetry,setTelemetry]=useState([])
     const [photoData,setPhotoData]=useState([])
+    const [loader,setLoader]=useState(false);
+
     const roverOptions = [
         { label: 'Curiosity', value: 'curiosity' },
         { label: 'Opportunity', value: 'opportunity' },
@@ -43,23 +46,27 @@ import {
         .catch((err) => {
           console.log(err);
         });
+        setLoader(false);
     };
 
     useEffect(()=>{
       let url = roverManifest("curiosity");
-      //console.log("URL",url);
       getTelemetry(url);
     },[]);
 
 
     const search=()=>{
-      let url ="";
-      url = roverManifest(drpValue);
-      getTelemetry(url);
-      console.log(url);
+      setLoader(true);
+      setTimeout(()=>{
+        let url ="";
+        url = roverManifest(drpValue);
+        getTelemetry(url);
+      },10);
+
+      
     }
 
-    const [page,setPage]=useState(1);
+    //const [page,setPage]=useState(1);
 
     return(
     <View style={styles.container}>
@@ -67,8 +74,6 @@ import {
           <View style={{ paddingBottom:10, flexDirection:"row",justifyContent:"space-between",flex:1}}>
             <View style={{flex:1,padding:20}}>
               <Dropdown
-                      //selectedTextStyle={styles.selectedTextStyle}
-                      //iconStyle={styles.iconStyle}
                       style={[styles.dropdown,isFocus && { borderColor: '#fc3d21'}]}
                       placeholderStyle={styles.drpPlaceholderStyle}
                       selectedTextStyle={styles.drpSelectedStyle}
@@ -96,6 +101,7 @@ import {
             </View>
             <View style={{flex:1,padding:20}}>
                 <Button 
+                  loading={loader}
                   style={{width:"100%",borderRadius: 8,minHeight:45}}
                   icon="magnify" 
                   mode="outlined" 
@@ -126,7 +132,9 @@ import {
             </View>
           </View>
           <View style={{flex:5}}>
+            <ScrollView>
               <DataTable data={photoData}></DataTable>
+            </ScrollView>
           </View>
         </View>
 

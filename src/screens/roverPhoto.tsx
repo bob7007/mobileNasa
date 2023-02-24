@@ -6,6 +6,7 @@ import {
     TouchableOpacity,
     FlatList,
     SafeAreaView,
+    Keyboard
   } from "react-native";
   import { WebView } from 'react-native-webview';
   import { Dropdown } from 'react-native-element-dropdown';
@@ -24,7 +25,9 @@ import {
     const nav = navigation;
     const navi = useNavigation();
     const [value, setValue] = React.useState('');
-    const [roverPhoto, setRoverPhoto] = useState([]);
+    const [roverPhoto, setRoverPhoto] = useState([
+      {img_src:"",rover:{name:"",landing_date:"",launch_date:""},camera:{full_name:""}}
+    ]);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalItem,setModalItem]=useState([]);
     const showModal = () => setModalVisible(true);
@@ -35,11 +38,23 @@ import {
     const [dateType, setDateType] = useState('earth');
     const [marsDate, setMarsDate] = useState("1000");
     const [earthDate, setEarthDate] = useState(new Date());
-    //const [date, setDate] = useState(new Date());
     const [showDate,setShowDate] = useState(false);
-    const [onWebView,setOnWebView] = useState(false);
+    const [displayDate,setDisplayDate] = useState("Enter Date");
+    const [keyboardDisplay,setKeyboardDisplay]=useState(false);
+    const [loader,setLoader]=useState(false);
+
+    Keyboard.addListener('keyboardDidShow', () => {
+      setKeyboardDisplay(true);
+      console.log(true);
+    });
+
+    Keyboard.addListener('keyboardDidHide', () => {
+      setKeyboardDisplay(false);
+      console.log(false);
+    });
 
     const getDefaultRoverPhoto = () => {
+      setDrpValue("curiosity");
       let url = roverPhotoURl(true,"curiosity");
         axios
           .get(url)
@@ -62,6 +77,8 @@ import {
             .catch((err) => {
               console.log(err);
             });
+
+            setLoader(false);
         };
 
     useEffect(()=>{
@@ -84,7 +101,7 @@ import {
             style={styles.galleryItem}
           >
             <TouchableOpacity onPress={()=>{selectPicture(item)}}>
-              <Image source={{uri: item.img_src}} style={{width: 120, height: 120}} />
+              <Image source={{uri: item?.img_src?item.img_src:""}} style={{width: 120, height: 120}} />
             </TouchableOpacity>
             
           </View>
@@ -110,39 +127,22 @@ import {
       };
 
       const search=()=>{
-        
+        setLoader(true);
         let date = dateType==="mars"?marsDate:
         earthDate.getFullYear()+'-'+((earthDate.getMonth() > 8) ? (earthDate.getMonth() + 1) : ('0' + (earthDate.getMonth() + 1)))+'-'+ ((earthDate.getDate() > 9) ? earthDate.getDate() : ('0' + earthDate.getDate()));
         let url = roverPhotoURl(isLatest,drpValue,dateType,date);
-        console.log("url",url);
-
-        getRoverPhoto(url);
+        setTimeout(()=>{
+          getRoverPhoto(url);
+        },10)
       }
 
       const onChange = (event:any, selectedDate:any) => {
         const currentDate = selectedDate;
         setShowDate(false);
         setEarthDate(currentDate);
+        let date = selectedDate.getFullYear()+'-'+((selectedDate.getMonth() > 8) ? (selectedDate.getMonth() + 1) : ('0' + (selectedDate.getMonth() + 1)))+'-'+ ((selectedDate.getDate() > 9) ? selectedDate.getDate() : ('0' + selectedDate.getDate()));
+        setDisplayDate(date);
       };
-
-      const openWebView=()=>{
-        
-            return(
-              <SafeAreaView style={{ flex: 1 }}>
-              <View>
-                <Button onPress={() => nav.goBack()}>Go Back</Button>
-                <WebView
-                source={{
-                  uri: 'https://reactnative.dev/',
-                }}
-                javaScriptEnabled
-                originWhitelist={["http://", "https://"]}
-                style={{marginTop: 20}}
-              />
-              </View>
-              </SafeAreaView>
-            );
-      }
      
     return(
     <View style={styles.container}>
@@ -204,6 +204,7 @@ import {
               </View>
               <View style={{flex:1,padding:20}}>
               <Button 
+                loading={loader}
                 style={{width:"100%",borderRadius: 8,minHeight:45}}
                 icon="magnify" 
                 mode="outlined" 
@@ -214,15 +215,21 @@ import {
               </Button>       
             
                 {dateType==="mars"&&!isLatest?
-              <View style={{paddingTop:40}}>
+              <View style={{paddingTop:40}}>              
                 <TextInput
                   mode="outlined"
                   outlineColor="#0B3D91"
                   outlineStyle={{borderWidth:2,borderRadius: 8}}
                   label="Mars Date - Sol"
                   value={marsDate}
-                  onChangeText={sol => setMarsDate(sol)}
+                  onChangeText={sol => {
+                    setMarsDate(sol);
+                    //setKeyboardDisplay(true);
+                    
+                  }}
+                  //onFocus={()=>{setKeyboardDisplay(true)}}
                 /> 
+                
                 <HelperText type="error" visible={marsDateHasErrors()}>
                   Mars Date must be a number.
                 </HelperText>
@@ -242,7 +249,7 @@ import {
                 onPress={()=>{
                   setShowDate(true);
                 }}>
-                {"Enter Date"}
+                {displayDate}
               </Button>
               </View>
               :<></>
@@ -256,6 +263,7 @@ import {
                 maximumDate={new Date()}
                 onChange={onChange}
               />
+              
               </View>
               :<></>
               }
@@ -264,10 +272,10 @@ import {
            
 
           </View>
-          <View style={roverPhoto.length>0?{flex:7}:{flex:5}}>
+          <View style={roverPhoto.length>0&&!keyboardDisplay?{flex:7}:{flex:4}}>
             {roverPhoto.length>0?
-            
-            <FlatList
+              
+              <FlatList
                 data={roverPhoto}
                 style={styles.galleryContainer}
                 renderItem={renderItem}

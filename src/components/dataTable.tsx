@@ -4,7 +4,8 @@ import { Text,FlatList,View,SafeAreaView } from 'react-native';
 import { Provider as PaperProvider } from 'react-native-paper';
 import { Dropdown } from 'react-native-element-dropdown';
 import {styles} from "../screens/commonStyles";
-const numberOfItemsPerPageList = [1, 3, 5];
+
+const numberOfItemsPerPageList = [2, 4, 6, 8, 10, 12];
 
 const headers = [
     {
@@ -52,7 +53,7 @@ const dataTable: React.FC<tableProp> = ({data}) => {
             key:number;
           }
           
-        cam.forEach((elem, i) => {      
+        cam.forEach((elem:string, i) => {      
             let obj={}as camProp;
             obj.name=elem;
             obj.value=elem;
@@ -60,27 +61,20 @@ const dataTable: React.FC<tableProp> = ({data}) => {
             drpData.push(obj);
         })
 
-
         return(<Dropdown
-            //selectedTextStyle={styles.selectedTextStyle}
-            //iconStyle={styles.iconStyle}
-            //style={{width:"100%"}}
             placeholderStyle={key%2===0?{color:"#F5F5F5"}:{color:"black"}}
             selectedTextStyle={key%2===0?{color:"#F5F5F5"}:{color:"black"}}
             iconColor={key%2===0?"#F5F5F5":"black"}
-            itemTextStyle={{fontSize:10}}
+            itemTextStyle={{fontSize:10,flex:1}}
             containerStyle={[styles.dropDownContainerStyle,{width:100}]}
-            //activeColor="red"
             data={drpData}
             maxHeight={300}
-            labelField="name"
+            labelField={"name"}
             valueField="value"
-            placeholder={"Cam"}
-            //value={"Cam"}
-            //onFocus={() => setIsFocus(true)}
-            //onBlur={() => setIsFocus(false)}
+            placeholder={"Name"}
             onChange={item => {
-                
+                let selected:string = item.name;
+                item.name = selected.length>6?selected.substring(0, 4)+"...":selected;
             }}
           />)
       }
@@ -89,7 +83,7 @@ const dataTable: React.FC<tableProp> = ({data}) => {
 
     const [page, setPage] = React.useState(0);
     const [numberOfItemsPerPage, onItemsPerPageChange] = React.useState(
-    numberOfItemsPerPageList[2]
+    numberOfItemsPerPageList[1]
     );
     const from = page * numberOfItemsPerPage;
     const to = Math.min((page + 1) * numberOfItemsPerPage, data.length);
