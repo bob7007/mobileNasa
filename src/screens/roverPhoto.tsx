@@ -19,6 +19,7 @@ import {
   import DateTimePicker from '@react-native-community/datetimepicker';
   import { useNavigation } from "@react-navigation/native";
   import hazard from "../assets/hazard.png"
+  import rover from "../assets/rover.png"
 
   const RoverPhoto=({ navigation })=>{
     const webviewRef = useRef(null);
@@ -330,7 +331,7 @@ import {
 
           <View style={{flex:2,alignItems:"center"}}>
             <Image style={{width: 100, height: 100}}
-             source={{uri:"https://cdn-icons-png.flaticon.com/512/5403/5403095.png"}}></Image>
+             source={rover}></Image>
           </View>
             
          

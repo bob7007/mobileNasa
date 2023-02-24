@@ -1,11 +1,6 @@
 import {
-  StyleSheet,
   Text,
   View,
-  Image,
-  TouchableOpacity,
-  FlatList,
-  SafeAreaView,
   ScrollView
 } from "react-native";
   //import * as React from 'react';
