@@ -12,7 +12,7 @@ import {
   import { Dropdown } from 'react-native-element-dropdown';
   import React, { useState, useEffect,useRef } from "react";
   import axios from "axios";
-  import {HelperText,TextInput,RadioButton,Divider,Modal,Portal,Provider,Switch,Button,SegmentedButtons,Snackbar,IconButton,DataTable,Checkbox} from 'react-native-paper';
+  import {HelperText,TextInput,RadioButton,Divider,Modal,Portal,Provider,Switch,Button,SegmentedButtons,Snackbar,IconButton,DataTable,Checkbox, MD3LightTheme} from 'react-native-paper';
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
   import {roverPhotoURl} from "../utility"
@@ -214,6 +214,7 @@ import {
                 {dateType==="mars"&&!isLatest?
               <View style={{paddingTop:40}}>              
                 <TextInput
+                  theme={MD3LightTheme}
                   mode="outlined"
                   outlineColor="#0B3D91"
                   outlineStyle={{borderWidth:2,borderRadius: 8}}

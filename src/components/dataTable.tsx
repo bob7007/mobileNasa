@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { DataTable,List } from 'react-native-paper';
 import { Text,FlatList,View,SafeAreaView } from 'react-native';
-import { Provider as PaperProvider } from 'react-native-paper';
+import { MD3LightTheme } from 'react-native-paper';
 import { Dropdown } from 'react-native-element-dropdown';
 import {styles} from "../screens/commonStyles";
 
@@ -110,7 +110,7 @@ const dataTable: React.FC<tableProp> = ({data}) => {
 
     return (
         
-            <DataTable>
+            <DataTable >
             <DataTable.Header>
             {headers.map((header) => tableheader(header))}
             </DataTable.Header>
@@ -123,6 +123,7 @@ const dataTable: React.FC<tableProp> = ({data}) => {
                 .map((row) => tableRow(row)) }
 
             <DataTable.Pagination
+                theme={MD3LightTheme}
                 page={page}
                 numberOfPages={Math.ceil(data.length / numberOfItemsPerPage)}
                 onPageChange={(page) => setPage(page)}
