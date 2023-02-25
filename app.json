@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Rover Telemetry",
-    "slug": "rover-telemetry",
+    "slug": "roverTelemetry",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/appIcon.png",
