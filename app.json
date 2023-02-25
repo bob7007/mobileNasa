@@ -1,15 +1,15 @@
 {
   "expo": {
     "name": "Rover Telemetry",
-    "slug": "roverTelemetry",
+    "slug": "rover-telemetry",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/rover.png",
+    "icon": "./assets/appIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#F5F5F5"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -21,14 +21,10 @@
       "supportsTablet": true
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/rover.png",
-        "backgroundColor": "#FFFFFF"
-      },
       "package": "com.bob7007.roverTelemetry"
     },
     "web": {
-      "favicon": "./assets/rover.png"
+      "favicon": "./assets/appIcon.png"
     },
     "extra": {
       "eas": {
