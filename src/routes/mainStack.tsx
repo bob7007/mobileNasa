@@ -23,12 +23,6 @@ import {Text,View} from "react-native";
         </View>
     );
   }
-      //color:"#0B3D91",
-      //borderColor:"#0B3D91",
-      //borderWidth:3,
-      //borderRadius:10
-
-      
   
 const Stack = createStackNavigator();
 

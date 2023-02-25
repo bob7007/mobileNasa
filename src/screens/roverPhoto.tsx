@@ -46,12 +46,10 @@ import {
 
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardDisplay(true);
-      console.log(true);
     });
 
     Keyboard.addListener('keyboardDidHide', () => {
       setKeyboardDisplay(false);
-      console.log(false);
     });
 
     const getDefaultRoverPhoto = () => {
@@ -89,8 +87,6 @@ import {
     const selectPicture = (item:any) => {
       setModalItem(item);
       setModalVisible(true);
-      console.log(item,modalItem);
-      
     };
     
       const renderItem = ({ item, index }) => {
@@ -102,7 +98,7 @@ import {
             style={styles.galleryItem}
           >
             <TouchableOpacity onPress={()=>{selectPicture(item)}}>
-              <Image source={{uri: item?.img_src?item.img_src:""}} style={{width: 120, height: 120}} />
+              <Image source={{uri: item?.img_src?item.img_src:"https://i.stack.imgur.com/kOnzy.gif"}} style={{width: 120, height: 120}} />
             </TouchableOpacity>
             
           </View>
@@ -242,7 +238,7 @@ import {
 
               <View style={{paddingTop:50}}>
               <Button 
-                style={{width:"100%",borderRadius: 8}}
+                style={{width:"100%",borderRadius: 8,minHeight:45}}
                 icon="calendar-range" 
                 mode="outlined" 
                 buttonColor='#0B3D91'
@@ -309,7 +305,7 @@ import {
             onPress={hideModal}
           />
         </View>
-          <Image source={{uri: modalItem.img_src?modalItem.img_src:""}} resizeMode="contain" style={styles.modalImageStyle}/>
+          <Image source={{uri: modalItem.img_src?modalItem.img_src:"https://i.stack.imgur.com/kOnzy.gif"}} resizeMode="contain" style={styles.modalImageStyle}/>
           <Divider />
           <View style={{flex:3,backgroundColor:"#F5F5F5", flexDirection:"row"}}>
             <View style={{flex:1.5,}}>

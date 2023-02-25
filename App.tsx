@@ -7,7 +7,6 @@ import { AppRegistry } from 'react-native';
 import {expo} from './app.json';
 
 
-
 export default function App() {
 
 

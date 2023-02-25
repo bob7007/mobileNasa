@@ -10,7 +10,6 @@ interface buttonProps{
 export const NavButtons:React.FC<buttonProps> = ({navigation,value="home",setValue})=>{
     
     const gallery=()=>{
-        console.log("test",value);
         navigation.navigate('RoverPhoto');
       }
       const telemetrics=()=>{
@@ -19,7 +18,6 @@ export const NavButtons:React.FC<buttonProps> = ({navigation,value="home",setVal
       }
 
       const home=()=>{
-        console.log("home",value);
         navigation.navigate('Home'); 
       }
 

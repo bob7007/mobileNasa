@@ -34,7 +34,6 @@ import {
       axios
         .get(url)
         .then((response) => {
-          console.log(response);
           setTelemetry(response.data.photo_manifest); 
           setPhotoData(response.data.photo_manifest.photos);        
         })
