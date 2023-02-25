@@ -24,10 +24,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/rover.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.bob7007.roverTelemetry"
     },
     "web": {
       "favicon": "./assets/rover.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "38bcea2a-c872-4104-81d4-53be8a9d0373"
+      }
     }
   }
 }
