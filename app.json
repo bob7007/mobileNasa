@@ -4,10 +4,10 @@
     "slug": "roverTelemetry",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/appIcon.png",
+    "icon": "./assets/customIcon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/splash.png",
+      "image": "./assets/customIcon.png",
       "resizeMode": "contain",
       "backgroundColor": "#F5F5F5"
     },
