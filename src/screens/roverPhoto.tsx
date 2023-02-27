@@ -12,7 +12,7 @@ import {
   import { Dropdown } from 'react-native-element-dropdown';
   import React, { useState, useEffect,useRef } from "react";
   import axios from "axios";
-  import {HelperText,TextInput,RadioButton,Divider,Modal,Portal,Provider,Switch,Button,SegmentedButtons,Snackbar,IconButton,DataTable,Checkbox, MD3LightTheme} from 'react-native-paper';
+  import {HelperText,TextInput,RadioButton,Divider,Modal,Portal,Button,IconButton,Checkbox, MD3LightTheme,ActivityIndicator, MD2Colors} from 'react-native-paper';
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
   import {roverPhotoURl} from "../utility"
@@ -29,6 +29,9 @@ import {
     const [roverPhoto, setRoverPhoto] = useState([
       {img_src:"",rover:{name:"",landing_date:"",launch_date:""},camera:{full_name:""}}
     ]);
+    const [roverPhotoParsed,setRoverPhotoParsed]= useState([
+      {img_src:"",rover:{name:"",landing_date:"",launch_date:""},camera:{full_name:""}}
+    ]);
     const [modalVisible, setModalVisible] = useState(false);
     const [modalItem,setModalItem]=useState([]);
     const showModal = () => setModalVisible(true);
@@ -43,6 +46,7 @@ import {
     const [displayDate,setDisplayDate] = useState("Enter Date");
     const [keyboardDisplay,setKeyboardDisplay]=useState(false);
     const [loader,setLoader]=useState(false);
+    const [offset,setOffset]=useState(0);
 
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardDisplay(true);
@@ -58,6 +62,7 @@ import {
         axios
           .get(url)
           .then((response) => {
+            setRoverPhotoParsed(response.data.latest_photos);
             setRoverPhoto(response.data.latest_photos);
           })
           .catch((err) => {
@@ -69,14 +74,27 @@ import {
           axios
             .get(url)
             .then((response) => {
-              isLatest?
-              setRoverPhoto(response.data.latest_photos):
-              setRoverPhoto(response.data.photos);
+
+              if(isLatest){
+                setRoverPhoto(response.data.latest_photos);
+                setRoverPhotoParsed(response.data.latest_photos);
+              }else{
+                setRoverPhoto(response.data.photos);
+                let parsedResponse = response.data.photos.slice(0,12);
+                setRoverPhotoParsed(parsedResponse);
+                setOffset(1);
+                console.log("all data",response.data.photos);
+                console.log("initial parsed",parsedResponse);
+
+              }
+
+              
+              
             })
             .catch((err) => {
               console.log(err);
             });
-
+            
             setLoader(false);
         };
 
@@ -117,9 +135,6 @@ import {
       const marsDateHasErrors = () => {
         let error = false;
         error = !(/^\d+$/.test(marsDate));
-        if(!error&&marsDate==="0"||!error&&marsDate.charAt(0)==="0"){
-          error=true;
-        }
         return error;
       };
 
@@ -128,6 +143,7 @@ import {
         let date = dateType==="mars"?marsDate:
         earthDate.getFullYear()+'-'+((earthDate.getMonth() > 8) ? (earthDate.getMonth() + 1) : ('0' + (earthDate.getMonth() + 1)))+'-'+ ((earthDate.getDate() > 9) ? earthDate.getDate() : ('0' + earthDate.getDate()));
         let url = roverPhotoURl(isLatest,drpValue,dateType,date);
+        console.log("URL: ",url);
         setTimeout(()=>{
           getRoverPhoto(url);
         },10)
@@ -140,6 +156,33 @@ import {
         let date = selectedDate.getFullYear()+'-'+((selectedDate.getMonth() > 8) ? (selectedDate.getMonth() + 1) : ('0' + (selectedDate.getMonth() + 1)))+'-'+ ((selectedDate.getDate() > 9) ? selectedDate.getDate() : ('0' + selectedDate.getDate()));
         setDisplayDate(date);
       };
+
+      const loadMoreData=()=>{
+          let firstIndex = (offset*13)-offset;
+          let lastIndex = ((offset+1)*13)-(offset+1);
+
+          if(offset>0){
+            let parsedResponse = roverPhoto.slice(firstIndex,lastIndex);
+            //console.log("slice",parsedResponse);
+            parsedResponse = [...roverPhotoParsed,...parsedResponse];
+            setRoverPhotoParsed(parsedResponse);
+            setOffset(offset+1);
+            console.log("appended slice",parsedResponse);
+          }
+      }
+
+      const flatListLoad = (
+        <View style={{flexDirection:"row",justifyContent:"center"}}>
+          {roverPhoto.length===roverPhotoParsed.length?
+          <></>:
+          <>
+            <ActivityIndicator animating={true} color={MD2Colors.red800} />
+            <Text style={{paddingLeft:5}}>Loading more data...</Text>
+          </>         
+          }
+        </View>
+        
+      );
      
     return(
     <View style={styles.container}>
@@ -221,11 +264,12 @@ import {
                   label="Mars Date - Sol"
                   value={marsDate}
                   onChangeText={sol => {
+
+                    if(sol.length>1 && sol.charAt(0)==="0"){
+                      sol = sol.substring(1, sol.length);
+                    }
                     setMarsDate(sol);
-                    //setKeyboardDisplay(true);
-                    
                   }}
-                  //onFocus={()=>{setKeyboardDisplay(true)}}
                 /> 
                 
                 <HelperText type="error" visible={marsDateHasErrors()}>
@@ -272,13 +316,19 @@ import {
           </View>
           <View style={roverPhoto.length>0&&!keyboardDisplay?{flex:7}:{flex:4}}>
             {roverPhoto.length>0?
+              <>
+                <FlatList
+                  data={roverPhotoParsed}
+                  style={styles.galleryContainer}
+                  renderItem={renderItem}
+                  numColumns={3}
+                  onEndReached={loadMoreData}
+                  onEndReachedThreshold ={0.1}
+                />
+                
+                {flatListLoad}
+              </>
               
-              <FlatList
-                data={roverPhoto}
-                style={styles.galleryContainer}
-                renderItem={renderItem}
-                numColumns={3}
-              />
               :<View style={{padding:10,backgroundColor:"white"}}>
                 <Text style={{padding:30, fontSize:20, textAlign:"center"}}>No Data Available</Text>
                 <Image 
