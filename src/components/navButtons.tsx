@@ -47,7 +47,7 @@ export const NavButtons:React.FC<buttonProps> = ({navigation,value="home",setVal
             },
             {
               value: 'telemetrics',
-              label: 'Telemetrics',
+              label: 'Telemetry',
               icon:"file-table-outline",
               onPress:telemetrics,
               //showSelectedCheck:value==="telemetrics"?true:false,

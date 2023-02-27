@@ -38,13 +38,14 @@ import {
       axios
         .get(url,{ headers: {
           Accept: "application/json",
-          "User-Agent": "axios 0.19.2"
+          //"User-Agent": "axios 0.19.2"
           //"User-Agent": "axios 0.21.1"
         }})
         .then((response) => {
           setTelemetry(response.data.photo_manifest); 
           setPhotoData(response.data.photo_manifest.photos);
-          setLoader(false);        
+          setLoader(false);
+          setError(false);        
         })
         .catch((err) => {
           console.log(err);
@@ -62,6 +63,8 @@ import {
 
 
     const search=()=>{
+      setTelemetry([]);
+      setPhotoData([]);
       setLoader(true);
       setTimeout(()=>{
         let url ="";
@@ -74,7 +77,7 @@ import {
     }
 
     const errorContent=(
-          <View style={{padding:10,backgroundColor:"white"}}>
+          <View style={{padding:10,backgroundColor:"white",bottom:100}}>
               <Text style={{padding:30, fontSize:20, textAlign:"center"}}>Request Error</Text>
               <Image 
               style={{width: 100, height: 100, alignSelf:"center"}}
@@ -132,29 +135,40 @@ import {
           errorContent:
         <>                   
         <View style={{flex:2,backgroundColor:"#F5F5F5", flexDirection:"row"}}>
-          <View style={{flex:1}}>
-              <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Total Photos:</Text>
-              <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Status:</Text>
-              <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Max Sol:</Text>
-              <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Max Earth Date</Text>
-              <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Launch Date:</Text>
-              <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Landing Date:</Text>
-            </View>
-          
-            <View style={{flex:1,}}>
-              <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.total_photos?telemetry.total_photos:""}</Text>
-              <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.status?telemetry.status:""}</Text>
-              <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.max_sol?telemetry.max_sol:""}</Text>
-              <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.max_date?telemetry.max_date:""}</Text>
-              <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.launch_date?telemetry.launch_date:""}</Text>
-              <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.landing_date?telemetry.landing_date:""}</Text>
-            </View>
+          {telemetry.length===0?
+            <Image 
+              source={{uri:"https://i.stack.imgur.com/kOnzy.gif"}}
+              resizeMode="contain" style={styles.modalImageStyle}/>
+            :<>   
+            <View style={{flex:1}}>
+                <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Total Photos:</Text>
+                <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Status:</Text>
+                <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Max Sol:</Text>
+                <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Max Earth Date</Text>
+                <Text style={[styles.tableItemTitle,{paddingLeft:30}]}>Launch Date:</Text>
+                <Text style={[styles.tableItemTitleAlternate,{paddingLeft:30}]}>Landing Date:</Text>
+              </View>
+            
+              <View style={{flex:1,}}>
+                <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.total_photos?telemetry.total_photos:""}</Text>
+                <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.status?telemetry.status:""}</Text>
+                <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.max_sol?telemetry.max_sol:""}</Text>
+                <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.max_date?telemetry.max_date:""}</Text>
+                <Text style={[styles.tableItemValue,{paddingLeft:30}]}>{telemetry?.launch_date?telemetry.launch_date:""}</Text>
+                <Text style={[styles.tableItemValueAlternate,{paddingLeft:30}]}>{telemetry?.landing_date?telemetry.landing_date:""}</Text>
+              </View>
+            </>
+          }
         </View>
         <View style={{flex:5}}>
+          {photoData.length===0?
+            <></>:
           <ScrollView>
             <DataTable data={photoData}></DataTable>
           </ScrollView>
+          }
         </View>
+          
       </>   
         
         }            

@@ -86,7 +86,7 @@ export const styles = StyleSheet.create({
       borderColor: "#fc3d21",
       borderWidth: 2,
       borderRadius: 8,
-      marginTop:-24,
+      //marginTop:-24,
       backgroundColor:"#EDEDED"
       
     },

@@ -60,7 +60,11 @@ import {
       setDrpValue("curiosity");
       let url = roverPhotoURl(true,"curiosity");
         axios
-          .get(url)
+          .get(url,{ headers: {
+            Accept: "application/json",
+            //"User-Agent": "axios 0.19.2"
+            //"User-Agent": "axios 0.21.1"
+          }})
           .then((response) => {
             setRoverPhotoParsed(response.data.latest_photos);
             setRoverPhoto(response.data.latest_photos);
@@ -72,7 +76,11 @@ import {
 
       const getRoverPhoto = (url:string) => {
           axios
-            .get(url)
+            .get(url,{ headers: {
+              Accept: "application/json",
+              //"User-Agent": "axios 0.19.2"
+              //"User-Agent": "axios 0.21.1"
+            }})
             .then((response) => {
 
               if(isLatest){
@@ -187,7 +195,7 @@ import {
     return(
     <View style={styles.container}>
         <View style={styles.body}>
-          <View  style={isLatest?{flex:1}:{flex:2.5}}>
+          <View  style={isLatest?{flex:1}:{flex:3}}>
             <View style={{paddingBottom:10, flexDirection:"row",justifyContent:"space-between",flex:2}}>
               <View style={{flex:1,padding:20}}>
                 <Dropdown
@@ -314,7 +322,7 @@ import {
            
 
           </View>
-          <View style={roverPhoto.length>0&&!keyboardDisplay?{flex:7}:{flex:4}}>
+          <View style={roverPhoto.length>0&&!keyboardDisplay?{flex:7}:{flex:3.5}}>
             {roverPhoto.length>0?
               <>
                 <FlatList
