@@ -21,7 +21,8 @@
       "supportsTablet": true
     },
     "android": {
-      "package": "com.bob7007.roverTelemetry"
+      "package": "com.bob7007.roverTelemetry",
+      "permissions": ["com.google.android.gms.permission.AD_ID"]
     },
     "web": {
       "favicon": "./assets/appIcon.png"
