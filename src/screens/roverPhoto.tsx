@@ -1,26 +1,29 @@
 import {
-    StyleSheet,
     Text,
     View,
     Image,
     TouchableOpacity,
     FlatList,
-    SafeAreaView,
-    Keyboard
+    Keyboard,
   } from "react-native";
-  import { WebView } from 'react-native-webview';
+
+  import {Checkbox, HelperText,TextInput,RadioButton,Divider,
+    Modal,Portal,Button,IconButton, MD3LightTheme,
+    ActivityIndicator, MD2Colors} from 'react-native-paper';
+
   import { Dropdown } from 'react-native-element-dropdown';
   import React, { useState, useEffect,useRef } from "react";
   import axios from "axios";
-  import {HelperText,TextInput,RadioButton,Divider,Modal,Portal,Button,IconButton,Checkbox, MD3LightTheme,ActivityIndicator, MD2Colors} from 'react-native-paper';
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
   import {roverPhotoURl} from "../utility"
   import DateTimePicker from '@react-native-community/datetimepicker';
   import { useNavigation } from "@react-navigation/native";
+  import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
   import hazard from "../assets/hazard.png"
   import rover from "../assets/rover.png"
 
+  
   const RoverPhoto=({ navigation })=>{
     const webviewRef = useRef(null);
     const nav = navigation;
@@ -47,6 +50,7 @@ import {
     const [keyboardDisplay,setKeyboardDisplay]=useState(false);
     const [loader,setLoader]=useState(false);
     const [offset,setOffset]=useState(0);
+    
 
     Keyboard.addListener('keyboardDidShow', () => {
       setKeyboardDisplay(true);
@@ -91,13 +95,8 @@ import {
                 let parsedResponse = response.data.photos.slice(0,12);
                 setRoverPhotoParsed(parsedResponse);
                 setOffset(1);
-                console.log("all data",response.data.photos);
-                console.log("initial parsed",parsedResponse);
 
-              }
-
-              
-              
+              }        
             })
             .catch((err) => {
               console.log(err);
@@ -151,7 +150,6 @@ import {
         let date = dateType==="mars"?marsDate:
         earthDate.getFullYear()+'-'+((earthDate.getMonth() > 8) ? (earthDate.getMonth() + 1) : ('0' + (earthDate.getMonth() + 1)))+'-'+ ((earthDate.getDate() > 9) ? earthDate.getDate() : ('0' + earthDate.getDate()));
         let url = roverPhotoURl(isLatest,drpValue,dateType,date);
-        console.log("URL: ",url);
         setTimeout(()=>{
           getRoverPhoto(url);
         },10)
@@ -171,11 +169,9 @@ import {
 
           if(offset>0){
             let parsedResponse = roverPhoto.slice(firstIndex,lastIndex);
-            //console.log("slice",parsedResponse);
             parsedResponse = [...roverPhotoParsed,...parsedResponse];
             setRoverPhotoParsed(parsedResponse);
             setOffset(offset+1);
-            console.log("appended slice",parsedResponse);
           }
       }
 
@@ -189,18 +185,37 @@ import {
           </>         
           }
         </View>
-        
+      );
+
+      const radioGroup=(
+        <>
+        {!isLatest?
+          <View style={{}}>
+            <RadioButton.Group onValueChange={newDate => setDateType(newDate)} value={dateType}>
+              <View style={{flexDirection:"column"}}>
+                <View style={{flexDirection:"row"}}>
+                  <RadioButton color="#0B3D91" value="earth" />
+                  <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Earth Date</Text>
+                </View>
+                <View style={{flexDirection:"row",bottom:5}}>
+                  <RadioButton color="#0B3D91" value="mars" />
+                  <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Mars Date</Text>
+                </View>
+              </View>
+            </RadioButton.Group>
+          </View>
+          :<></>                 
+        }
+        </>
       );
      
     return(
     <View style={styles.container}>
         <View style={styles.body}>
-          <View  style={isLatest?{flex:1}:{flex:3}}>
-            <View style={{paddingBottom:10, flexDirection:"row",justifyContent:"space-between",flex:2}}>
+          <View  style={{flex:1.2}}>
+            <View style={{paddingBottom:10, flexDirection:"row",justifyContent:"space-between"}}>
               <View style={{flex:1,padding:20}}>
                 <Dropdown
-                  //selectedTextStyle={styles.selectedTextStyle}
-                  //iconStyle={styles.iconStyle}
                   style={[styles.dropdown,isFocus && { borderColor: '#fc3d21' }]}
                   placeholderStyle={styles.drpPlaceholderStyle}
                   selectedTextStyle={styles.drpSelectedStyle}
@@ -221,34 +236,18 @@ import {
                     setDrpValue(item.value);
                     setIsFocus(false);
                   }}
-                />           
+                />                    
                 <View style={{flexDirection:"row"}}>
-                    <Checkbox
-                      color="#0B3D91"
-                      status={isLatest ? 'checked' : 'unchecked'}
-                      onPress={() => {
-                        setIsLatest(!isLatest);
-                      }}
-                    />
-                    <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Latest Pictures</Text>
+                  <Checkbox
+                    color="#0B3D91"
+                    status={isLatest ? 'checked' : 'unchecked'}
+                    onPress={() => {
+                      setIsLatest(!isLatest);
+                    }}
+                  />
+                  <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Latest Pictures</Text>
                 </View>
-
-                  <RadioButton.Group onValueChange={newDate => setDateType(newDate)} value={dateType}>
-                  {!isLatest?
-                  <View style={{flexDirection:"column"}}>
-                    <View style={{flexDirection:"row"}}>
-                      <RadioButton color="#0B3D91" value="earth" />
-                      <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Earth Date</Text>
-                    </View>
-                    <View style={{flexDirection:"row",bottom:5}}>
-                      <RadioButton color="#0B3D91" value="mars" />
-                      <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Mars Date</Text>
-                    </View>
-                  </View>
-                  :<></>
-                }
-                </RadioButton.Group>
-
+                {radioGroup}
               </View>
               <View style={{flex:1,padding:20}}>
               <Button 
@@ -263,6 +262,7 @@ import {
               </Button>       
             
                 {dateType==="mars"&&!isLatest?
+                
               <View style={{paddingTop:40}}>              
                 <TextInput
                   theme={MD3LightTheme}
@@ -319,10 +319,12 @@ import {
               }
               </View> 
             </View>
-           
-
           </View>
-          <View style={roverPhoto.length>0&&!keyboardDisplay?{flex:7}:{flex:3.5}}>
+
+        
+      
+       
+          <View style={roverPhoto.length>0&&!keyboardDisplay?{flex:3}:{flex:1}}>
             {roverPhoto.length>0?
               <>
                 <FlatList
@@ -337,18 +339,20 @@ import {
                 {flatListLoad}
               </>
               
-              :<View style={{padding:10,backgroundColor:"white"}}>
-                <Text style={{padding:30, fontSize:20, textAlign:"center"}}>No Data Available</Text>
-                <Image 
-                style={{width: 100, height: 100, alignSelf:"center"}}
-                source={hazard}></Image>
-                
-                <Text style={{padding:30, fontSize:20, textAlign:"center"}}>Detail Search parameters are available on the "Telemetrics" screen</Text>
-              </View>
-          
-          }
+            :<View style={{padding:10,backgroundColor:"white"}}>
+              <Text style={{padding:30, fontSize:20, textAlign:"center"}}>No Data Available</Text>
+              <Image 
+              style={{width: 100, height: 100, alignSelf:"center"}}
+              source={hazard}></Image>
+              
+              <Text style={{padding:30, fontSize:20, textAlign:"center"}}>Detail Search parameters are available on the "Telemetrics" screen</Text>
+            </View>
+            }
           </View>
         </View>
+
+
+
 
         <View style={styles.footer}>
         <NavButtons navigation={navigation} value={"gallery"} setValue={setValue}></NavButtons>        
