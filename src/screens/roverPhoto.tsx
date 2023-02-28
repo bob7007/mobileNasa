@@ -210,148 +210,146 @@ import {
       );
      
     return(
-    <View style={styles.container}>
-        <View style={styles.body}>
-          <View  style={{flex:1.2}}>
-            <View style={{paddingBottom:10, flexDirection:"row",justifyContent:"space-between"}}>
-              <View style={{flex:1,padding:20}}>
-                <Dropdown
-                  style={[styles.dropdown,isFocus && { borderColor: '#fc3d21' }]}
-                  placeholderStyle={styles.drpPlaceholderStyle}
-                  selectedTextStyle={styles.drpSelectedStyle}
-                  iconColor={"black"}
-                  itemTextStyle={[styles.drpPlaceholderStyle]}
-                  containerStyle={[styles.dropDownContainerStyle]}
-                  activeColor="#F5F5F5"
-                  data={roverOptions}
-                  maxHeight={300}
-                  labelField="label"
-                  valueField="value"
-                  placeholder={"Curiosity"}
-                  
-                  value={drpValue}
-                  onFocus={() => setIsFocus(true)}
-                  onBlur={() => setIsFocus(false)}
-                  onChange={item => {
-                    setDrpValue(item.value);
-                    setIsFocus(false);
-                  }}
-                />                    
-                <View style={{flexDirection:"row"}}>
-                  <Checkbox
-                    color="#0B3D91"
-                    status={isLatest ? 'checked' : 'unchecked'}
-                    onPress={() => {
-                      setIsLatest(!isLatest);
-                    }}
-                  />
-                  <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Latest Pictures</Text>
-                </View>
-                {radioGroup}
-              </View>
-              <View style={{flex:1,padding:20}}>
-              <Button 
-                loading={loader}
-                style={{width:"100%",borderRadius: 8,minHeight:45}}
-                icon="magnify" 
-                mode="outlined" 
-                buttonColor='#0B3D91'
-                textColor='white'
-                onPress={search}>
-                Search
-              </Button>       
-            
-                {dateType==="mars"&&!isLatest?
+    <View style={styles.container}> 
+      <View style={styles.body}>
+        <KeyboardAwareScrollView style={{flex:2}}>
+          <View style={{flexDirection:"row",justifyContent:"space-between"}}>
+            <View style={{flex:1,padding:20}}>
+              <Dropdown
+                style={[styles.dropdown,isFocus && { borderColor: '#fc3d21' }]}
+                placeholderStyle={styles.drpPlaceholderStyle}
+                selectedTextStyle={styles.drpSelectedStyle}
+                iconColor={"black"}
+                itemTextStyle={[styles.drpPlaceholderStyle]}
+                containerStyle={[styles.dropDownContainerStyle]}
+                activeColor="#F5F5F5"
+                data={roverOptions}
+                maxHeight={300}
+                labelField="label"
+                valueField="value"
+                placeholder={"Curiosity"}
                 
-              <View style={{paddingTop:40}}>              
-                <TextInput
-                  theme={MD3LightTheme}
-                  mode="outlined"
-                  outlineColor="#0B3D91"
-                  outlineStyle={{borderWidth:2,borderRadius: 8}}
-                  label="Mars Date - Sol"
-                  value={marsDate}
-                  onChangeText={sol => {
-
-                    if(sol.length>1 && sol.charAt(0)==="0"){
-                      sol = sol.substring(1, sol.length);
-                    }
-                    setMarsDate(sol);
+                value={drpValue}
+                onFocus={() => setIsFocus(true)}
+                onBlur={() => setIsFocus(false)}
+                onChange={item => {
+                  setDrpValue(item.value);
+                  setIsFocus(false);
+                }}
+              />                    
+              <View style={{flexDirection:"row"}}>
+                <Checkbox
+                  color="#0B3D91"
+                  status={isLatest ? 'checked' : 'unchecked'}
+                  onPress={() => {
+                    setIsLatest(!isLatest);
                   }}
-                /> 
-                
-                <HelperText type="error" visible={marsDateHasErrors()}>
-                  Mars Date must be a number.
-                </HelperText>
+                />
+                <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Latest Pictures</Text>
               </View>
-              :<></>
-              }
-
-              {dateType==="earth"&&!isLatest?
-
-              <View style={{paddingTop:50}}>
-              <Button 
-                style={{width:"100%",borderRadius: 8,minHeight:45}}
-                icon="calendar-range" 
-                mode="outlined" 
-                buttonColor='#0B3D91'
-                textColor='white'
-                onPress={()=>{
-                  setShowDate(true);
-                }}>
-                {displayDate}
-              </Button>
-              </View>
-              :<></>
-              }
-
-              {showDate?
-              <View>
-              <DateTimePicker
-                value={earthDate}
-                mode={"date"}
-                maximumDate={new Date()}
-                onChange={onChange}
-              />
-              
-              </View>
-              :<></>
-              }
-              </View> 
+              {radioGroup}
             </View>
-          </View>
+            <View style={{flex:1,padding:20}}>
+            <Button 
+              loading={loader}
+              style={{width:"100%",borderRadius: 8,minHeight:45}}
+              icon="magnify" 
+              mode="outlined" 
+              buttonColor='#0B3D91'
+              textColor='white'
+              onPress={search}>
+              Search
+            </Button>       
+          
+              {dateType==="mars"&&!isLatest?
+              
+            <View style={{paddingTop:40}}>              
+              <TextInput
+                theme={MD3LightTheme}
+                mode="outlined"
+                outlineColor="#0B3D91"
+                outlineStyle={{borderWidth:2,borderRadius: 8}}
+                label="Mars Date - Sol"
+                value={marsDate}
+                onChangeText={sol => {
 
-        
+                  if(sol.length>1 && sol.charAt(0)==="0"){
+                    sol = sol.substring(1, sol.length);
+                  }
+                  setMarsDate(sol);
+                }}
+              /> 
+              
+              <HelperText type="error" visible={marsDateHasErrors()}>
+                Mars Date must be a number.
+              </HelperText>
+            </View>
+            :<></>
+            }
+
+            {dateType==="earth"&&!isLatest?
+
+            <View style={{paddingTop:50}}>
+            <Button 
+              style={{width:"100%",borderRadius: 8,minHeight:45}}
+              icon="calendar-range" 
+              mode="outlined" 
+              buttonColor='#0B3D91'
+              textColor='white'
+              onPress={()=>{
+                setShowDate(true);
+              }}>
+              {displayDate}
+            </Button>
+            </View>
+            :<></>
+            }
+
+            {showDate?
+            <View>
+            <DateTimePicker
+              value={earthDate}
+              mode={"date"}
+              maximumDate={new Date()}
+              onChange={onChange}
+            />
+            
+            </View>
+            :<></>
+            }
+            </View> 
+          </View>
+        </KeyboardAwareScrollView>
       
        
-          <View style={roverPhoto.length>0&&!keyboardDisplay?{flex:3}:{flex:1}}>
-            {roverPhoto.length>0?
-              <>
-                <FlatList
-                  data={roverPhotoParsed}
-                  style={styles.galleryContainer}
-                  renderItem={renderItem}
-                  numColumns={3}
-                  onEndReached={loadMoreData}
-                  onEndReachedThreshold ={0.1}
-                />
-                
-                {flatListLoad}
-              </>
+        <View style={{ flex:2}}>
+          {roverPhoto.length>0?
+            <>
+              <FlatList
+                data={roverPhotoParsed}
+                style={styles.galleryContainer}
+                renderItem={renderItem}
+                numColumns={3}
+                onEndReached={loadMoreData}
+                onEndReachedThreshold ={0.1}
+              />
               
-            :<View style={{padding:10,backgroundColor:"white"}}>
-              <Text style={{padding:30, fontSize:20, textAlign:"center"}}>No Data Available</Text>
-              <Image 
-              style={{width: 100, height: 100, alignSelf:"center"}}
-              source={hazard}></Image>
-              
-              <Text style={{padding:30, fontSize:20, textAlign:"center"}}>Detail Search parameters are available on the "Telemetrics" screen</Text>
-            </View>
-            }
+              {flatListLoad}
+            </>
+            
+          :<View style={{padding:10,backgroundColor:"white"}}>
+            <Text style={{padding:30, fontSize:20, textAlign:"center"}}>No Data Available</Text>
+            <Image 
+            style={{width: 100, height: 100, alignSelf:"center"}}
+            source={hazard}></Image>
+            
+            <Text style={{padding:30, fontSize:20, textAlign:"center"}}>Detail Search parameters are available on the "Telemetrics" screen</Text>
           </View>
+          }
         </View>
+      </View>
 
-
+        
 
 
         <View style={styles.footer}>
