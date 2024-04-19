@@ -1,4 +1,3 @@
-
 import {
     StyleSheet,
     Text,
@@ -6,6 +5,8 @@ import {
     Image,
     ImageBackground,
     ScrollView,
+    Linking,
+    TouchableOpacity
   } from "react-native";
   import React, { useState, useEffect } from "react";
   import axios from "axios";
@@ -13,6 +14,7 @@ import {
   import {NavButtons} from "../components/navButtons";
   import {styles} from "../screens/commonStyles";
   import {webServiceTypes, apiAuth} from "../services/serviceType";
+  import { Video, ResizeMode } from 'expo-av';
 
   const Home=({ navigation })=> {
     const [value, setValue] = React.useState('home');
@@ -45,6 +47,86 @@ import {
       uri: dayPic.hdurl,
     };
 
+    const openYoutubeVideo = () => {
+      Linking.openURL(dayPic.url);
+    };
+
+    const extractVideoId = (url) => {
+      const match = url.match(/(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+      return match ? match[1] : null;
+    };
+    
+    const generateThumbnailUrl = (videoId) => {
+      return `https://i.ytimg.com/vi/${videoId}/maxresdefault.jpg`;
+    };
+
+    const defaultImageWidth = 200;
+    const defaultImageHeight = 200; 
+
+    const defaultImageUrl = "https://www.nasa.gov/wp-content/themes/nasa/assets/images/nasa-logo.svg";
+    const mediaContent = () => {
+      //const isYoutubeVideo = (url) => url.includes("youtube");
+      if (dayPic.media_type === "image") {
+        return (
+          <ImageBackground
+            source={{ uri: dayPic.url }}
+            resizeMode="cover"
+            style={{ flex: 0.7, justifyContent: "center" }}
+          ></ImageBackground>
+        );
+      }else if (dayPic.media_type === "video" && dayPic.url.includes("youtube")) {
+        const videoId = extractVideoId(dayPic.url);
+        if (videoId) {
+          const thumbnailUrl = generateThumbnailUrl(videoId);
+          return (
+              <ImageBackground
+                source={{ uri: thumbnailUrl }}
+                resizeMode="cover"
+                style={{ flex: 0.7, justifyContent: "center" }}
+              >                
+              <IconButton
+                icon="play-circle"
+                iconColor={'#E10600'}
+                size={60}
+                style={{ position: 'absolute', alignSelf: 'center', top: '45%' }}
+                onPress={() => Linking.openURL(dayPic.url)} 
+              />
+              </ImageBackground>
+          );
+        } else {
+          return (
+            <View style={{ flex: 0.7, justifyContent: "center", alignItems: "center" }}>
+              <ImageBackground
+                source={{ uri: defaultImageUrl }}
+                resizeMode="cover"
+                style={{ width: defaultImageWidth, height: defaultImageHeight }}
+              ></ImageBackground>
+            </View>
+          );
+        }
+      }else if (dayPic.media_type === "video" && dayPic.url.includes("mp4")) {
+        return (
+          <Video
+          source={{ uri: dayPic.url }}
+          style={{ flex: 0.7, justifyContent: 'center' }}
+          useNativeControls
+          resizeMode={ResizeMode.CONTAIN}
+          isLooping
+        />
+        );
+      }else{
+        return (
+          <View style={{ flex: 0.7, justifyContent: "center", alignItems: "center" }}>
+            <ImageBackground
+              source={{ uri: defaultImageUrl }}
+              resizeMode="cover"
+              style={{ width: defaultImageWidth, height: defaultImageHeight }}
+            ></ImageBackground>
+          </View>
+        );
+      }
+    };
+
 
     return (
       <View style={styles.container}>
@@ -58,12 +140,7 @@ import {
                     selected size={24} 
                     onPress={showModal} />
             </View>      
-
-            <ImageBackground
-            source={image}
-            resizeMode="cover"
-            style={{ flex: 0.7, justifyContent: "center" }}
-            ></ImageBackground>
+            {mediaContent()}
             <View style={{paddingTop:20, alignItems:"flex-start"}}>
                 <View style={{flexDirection:"row"}}>
                     <Text style={{color:"#0B3D91",fontWeight:"bold",flex:2 }}>{"Copyright: "}</Text>
