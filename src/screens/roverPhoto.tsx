@@ -216,8 +216,6 @@ import {
         </View>
       );
       
-      
-      
       const datePicker=(
         <>
           {dateType === "earth" && !isLatest ? (
@@ -374,8 +372,6 @@ import {
               {datePicker}
             </View> 
           </View>
-
-        </KeyboardAwareScrollView>
           <View style={{ flex: 2 }}>
             {roverPhoto.length > 0 ? (
               <>
@@ -386,6 +382,7 @@ import {
                   numColumns={3}
                   onEndReached={loadMoreData}
                   onEndReachedThreshold={0.1}
+                  scrollEnabled={false}
                 />
                 {flatListLoad}
               </>
@@ -404,7 +401,7 @@ import {
               </View>
             )}
           </View>
-      
+        </KeyboardAwareScrollView>
       </View>
 
       <View style={styles.footer}>
