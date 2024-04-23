@@ -42,7 +42,7 @@ import {
     const [drpValue,setDrpValue]=useState("curiosity");
     const [isFocus, setIsFocus] = useState(false);
     const [isLatest, setIsLatest] = useState(true);
-    const [dateType, setDateType] = useState('earth');
+    const [dateType, setDateType] = useState('mars');
     const [marsDate, setMarsDate] = useState("1000");
     const [earthDate, setEarthDate] = useState(new Date());
     const [showDate,setShowDate] = useState(false);
@@ -187,28 +187,137 @@ import {
         </View>
       );
 
-      const radioGroup=(
-        <>
-        {!isLatest?
-          <View style={{}}>
-            <RadioButton.Group onValueChange={newDate => setDateType(newDate)} value={dateType}>
-              <View style={{flexDirection:"column"}}>
-                <View style={{flexDirection:"row"}}>
-                  <RadioButton color="#0B3D91" value="earth" />
-                  <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Earth Date</Text>
-                </View>
-                <View style={{flexDirection:"row",bottom:5}}>
-                  <RadioButton color="#0B3D91" value="mars" />
-                  <Text style={{paddingTop:7,fontWeight:"bold",fontSize:14}}>Mars Date</Text>
-                </View>
+      const radioGroup = (
+        <View>
+          <RadioButton.Group onValueChange={newDate => setDateType(newDate)} value={dateType}>
+            <View style={{ flexDirection: "column" }}>
+              <View style={{ flexDirection: "row" }}>
+                <RadioButton
+                  color="#0B3D91"
+                  value="earth"
+                  disabled={isLatest}
+                />
+                <Text style={{ paddingTop: 7, fontWeight: "bold", fontSize: 14 }}>
+                  Earth Date
+                </Text>
               </View>
-            </RadioButton.Group>
+              <View style={{ flexDirection: "row", bottom: 5 }}>
+                <RadioButton
+                  color="#0B3D91"
+                  value="mars"
+                  disabled={isLatest}
+                />
+                <Text style={{ paddingTop: 7, fontWeight: "bold", fontSize: 14 }}>
+                  Mars Date
+                </Text>
+              </View>
+            </View>
+          </RadioButton.Group>
+        </View>
+      );
+      
+      
+      
+      const datePicker=(
+        <>
+          {dateType === "earth" && !isLatest ? (
+            <View style={{ paddingTop: 50 }}>
+              <Button 
+                style={{ width: "100%", borderRadius: 8, minHeight: 45 }}
+                icon="calendar-range" 
+                mode="outlined" 
+                buttonColor='#0B3D91'
+                textColor='white'
+                onPress={() => {
+                  setShowDate(true);
+                }}
+              >
+                {displayDate}
+              </Button>
+            </View>
+          ) : (
+            dateType === "earth" && isLatest ? (
+              <View style={{ opacity: 0.5, paddingTop: 50 }}>
+                <Button 
+                  style={{ width: "100%", borderRadius: 8, minHeight: 45 }}
+                  icon="calendar-range" 
+                  mode="outlined" 
+                  buttonColor='#0B3D91'
+                  textColor='white'
+                  disabled
+                >
+                  {displayDate}
+                </Button>
+              </View>
+            ) : (
+              <></>
+            )
+          )}
+          {showDate?
+          <View>
+            <DateTimePicker
+              value={earthDate}
+              mode={"date"}
+              maximumDate={new Date()}
+              onChange={onChange}
+            />
           </View>
-          :<></>                 
-        }
+          :<></>
+          }
         </>
       );
-     
+
+      const solInput=(
+        <>
+            {dateType === "mars" && !isLatest ? (
+            <View style={{ paddingTop: 40 }}>
+              <TextInput
+                theme={MD3LightTheme}
+                mode="outlined"
+                outlineColor="#0B3D91"
+                outlineStyle={{ borderWidth: 2, borderRadius: 8 }}
+                label="Mars Date - Sol"
+                value={marsDate}
+                onChangeText={(sol) => {
+                  if (sol.length > 1 && sol.charAt(0) === "0") {
+                    sol = sol.substring(1, sol.length);
+                  }
+                  setMarsDate(sol);
+                }}
+              />
+              <HelperText type="error" visible={marsDateHasErrors()}>
+                Mars Date must be a number.
+              </HelperText>
+            </View>
+            ) : (
+              dateType === "mars" && isLatest ? (
+                <View style={{ opacity: 0.5, paddingTop: 40 }}>
+                  <TextInput
+                    theme={MD3LightTheme}
+                    mode="outlined"
+                    outlineColor="#0B3D91"
+                    outlineStyle={{ borderWidth: 2, borderRadius: 8 }}
+                    label="Mars Date - Sol"
+                    value={marsDate}
+                    onChangeText={(sol) => {
+                      if (sol.length > 1 && sol.charAt(0) === "0") {
+                        sol = sol.substring(1, sol.length);
+                      }
+                      setMarsDate(sol);
+                    }}
+                    editable={false} // Make TextInput disabled
+                  />
+                  <HelperText type="error" visible={marsDateHasErrors()}>
+                    Mars Date must be a number.
+                  </HelperText>
+                </View>
+              ) : (
+                <></>
+              )
+            )}
+        </>
+      );
+
     return(
     <View style={styles.container}> 
       <View style={styles.body}>
@@ -250,159 +359,109 @@ import {
               {radioGroup}
             </View>
             <View style={{flex:1,padding:20}}>
-            <Button 
-              loading={loader}
-              style={{width:"100%",borderRadius: 8,minHeight:45}}
-              icon="magnify" 
-              mode="outlined" 
-              buttonColor='#0B3D91'
-              textColor='white'
-              onPress={search}>
-              Search
-            </Button>       
-          
-              {dateType==="mars"&&!isLatest?
-              
-            <View style={{paddingTop:40}}>              
-              <TextInput
-                theme={MD3LightTheme}
-                mode="outlined"
-                outlineColor="#0B3D91"
-                outlineStyle={{borderWidth:2,borderRadius: 8}}
-                label="Mars Date - Sol"
-                value={marsDate}
-                onChangeText={sol => {
-
-                  if(sol.length>1 && sol.charAt(0)==="0"){
-                    sol = sol.substring(1, sol.length);
-                  }
-                  setMarsDate(sol);
-                }}
-              /> 
-              
-              <HelperText type="error" visible={marsDateHasErrors()}>
-                Mars Date must be a number.
-              </HelperText>
-            </View>
-            :<></>
-            }
-
-            {dateType==="earth"&&!isLatest?
-
-            <View style={{paddingTop:50}}>
-            <Button 
-              style={{width:"100%",borderRadius: 8,minHeight:45}}
-              icon="calendar-range" 
-              mode="outlined" 
-              buttonColor='#0B3D91'
-              textColor='white'
-              onPress={()=>{
-                setShowDate(true);
-              }}>
-              {displayDate}
-            </Button>
-            </View>
-            :<></>
-            }
-
-            {showDate?
-            <View>
-            <DateTimePicker
-              value={earthDate}
-              mode={"date"}
-              maximumDate={new Date()}
-              onChange={onChange}
-            />
-            
-            </View>
-            :<></>
-            }
-            </View> 
-          </View>
-        </KeyboardAwareScrollView>
-      
-       
-        <View style={{ flex:2}}>
-          {roverPhoto.length>0?
-            <>
-              <FlatList
-                data={roverPhotoParsed}
-                style={styles.galleryContainer}
-                renderItem={renderItem}
-                numColumns={3}
-                onEndReached={loadMoreData}
-                onEndReachedThreshold ={0.1}
-              />
-              
-              {flatListLoad}
-            </>
-            
-          :<View style={{padding:10,backgroundColor:"white"}}>
-            <Text style={{padding:30, fontSize:20, textAlign:"center"}}>No Data Available</Text>
-            <Image 
-            style={{width: 100, height: 100, alignSelf:"center"}}
-            source={hazard}></Image>
-            
-            <Text style={{padding:30, fontSize:20, textAlign:"center"}}>Detail Search parameters are available on the "Telemetrics" screen</Text>
-          </View>
-          }
-        </View>
-      </View>
-
-        
-
-
-        <View style={styles.footer}>
-        <NavButtons navigation={navigation} value={"gallery"} setValue={setValue}></NavButtons>        
-        </View>
-
-        <Portal>
-        <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}>
-        <View style={{flex:1,backgroundColor:"#F5F5F5", justifyContent:"center",alignItems:"flex-end"}}>
-          <IconButton
-            icon="close-circle-outline"
-            iconColor="#0B3D91"
-            size={30}
-            onPress={hideModal}
-          />
-        </View>
-          <Image source={{uri: modalItem.img_src?modalItem.img_src:"https://i.stack.imgur.com/kOnzy.gif"}} resizeMode="contain" style={styles.modalImageStyle}/>
-          <Divider />
-          <View style={{flex:3,backgroundColor:"#F5F5F5", flexDirection:"row"}}>
-            <View style={{flex:1.5,}}>
-              <Text style={styles.tableItemTitle}>Rover:</Text>
-              <Text style={styles.tableItemTitleAlternate}>Status:</Text>
-              <Text style={styles.tableItemTitle}>Landing Date:</Text>
-              <Text style={styles.tableItemTitleAlternate}>Launch Date:</Text>
-              <Text style={styles.tableItemTitle}>Camera:</Text>
-            </View>
-          
-            <View style={{flex:1.5,}}>
-              <Text style={styles.tableItemValue}>{modalItem?.rover?.name?modalItem.rover.name:""}</Text>
-              <Text style={styles.tableItemValueAlternate}>{modalItem?.rover?.status?modalItem.rover.status:""}</Text>
-              <Text style={styles.tableItemValue}>{modalItem?.rover?.landing_date?modalItem.rover.landing_date:""}</Text>
-              <Text style={styles.tableItemValueAlternate}>{modalItem?.rover?.launch_date?modalItem.rover.launch_date:""}</Text>
-              <Text style={styles.tableItemValue}>{modalItem?.camera?.full_name?modalItem.camera.full_name:""}</Text>
-            </View>
-          </View>
-
-          <View style={{flex:2,alignItems:"center"}}>
-            <Image style={{width: 100, height: 100}}
-             source={rover}></Image>
-          </View>
-            
-         
-          <View style={{flex:1,backgroundColor:"#F5F5F5",justifyContent:"center"}}>
               <Button 
-                style={{}}
-                icon="close-circle-outline" 
+                loading={loader}
+                style={{width:"100%",borderRadius: 8,minHeight:45}}
+                icon="magnify" 
                 mode="outlined" 
                 buttonColor='#0B3D91'
                 textColor='white'
-                onPress={hideModal}>
+                onPress={search}
+              >
+                Search
+              </Button>       
+              {solInput}
+              {datePicker}
+            </View> 
+          </View>
+
+        </KeyboardAwareScrollView>
+          <View style={{ flex: 2 }}>
+            {roverPhoto.length > 0 ? (
+              <>
+                <FlatList
+                  data={roverPhotoParsed}
+                  style={styles.galleryContainer}
+                  renderItem={renderItem}
+                  numColumns={3}
+                  onEndReached={loadMoreData}
+                  onEndReachedThreshold={0.1}
+                />
+                {flatListLoad}
+              </>
+            ) : (
+              <View style={{ padding: 10, backgroundColor: "white" }}>
+                <Text style={{ padding: 30, fontSize: 20, textAlign: "center" }}>
+                  No Data Available
+                </Text>
+                <Image
+                  style={{ width: 100, height: 100, alignSelf: "center" }}
+                  source={hazard}
+                />
+                <Text style={{ padding: 30, fontSize: 20, textAlign: "center" }}>
+                  Detail Search parameters are available on the "Telemetrics" screen
+                </Text>
+              </View>
+            )}
+          </View>
+      
+      </View>
+
+      <View style={styles.footer}>
+        <NavButtons navigation={navigation} value={"gallery"} setValue={setValue}></NavButtons>        
+      </View>
+
+      <Portal>
+        <Modal visible={modalVisible} onDismiss={hideModal} contentContainerStyle={styles.modalContainer}>
+          <View style={{flex:1,backgroundColor:"#F5F5F5", justifyContent:"center",alignItems:"flex-end"}}>
+            <IconButton
+              icon="close-circle-outline"
+              iconColor="#0B3D91"
+              size={30}
+              onPress={hideModal}
+            />
+          </View>
+            
+          <>
+            <Image source={{uri: modalItem.img_src?modalItem.img_src:"https://i.stack.imgur.com/kOnzy.gif"}} resizeMode="contain" style={styles.modalImageStyle}/>
+              <Divider />
+            <View style={{flex:3,backgroundColor:"#F5F5F5", flexDirection:"row"}}>
+              <View style={{flex:1.5,}}>
+                <Text style={styles.tableItemTitle}>Rover:</Text>
+                <Text style={styles.tableItemTitleAlternate}>Status:</Text>
+                <Text style={styles.tableItemTitle}>Landing Date:</Text>
+                <Text style={styles.tableItemTitleAlternate}>Launch Date:</Text>
+                <Text style={styles.tableItemTitle}>Camera:</Text>
+              </View>
+            
+              <View style={{flex:1.5,}}>
+                <Text style={styles.tableItemValue}>{modalItem?.rover?.name?modalItem.rover.name:""}</Text>
+                <Text style={styles.tableItemValueAlternate}>{modalItem?.rover?.status?modalItem.rover.status:""}</Text>
+                <Text style={styles.tableItemValue}>{modalItem?.rover?.landing_date?modalItem.rover.landing_date:""}</Text>
+                <Text style={styles.tableItemValueAlternate}>{modalItem?.rover?.launch_date?modalItem.rover.launch_date:""}</Text>
+                <Text style={styles.tableItemValue}>{modalItem?.camera?.full_name?modalItem.camera.full_name:""}</Text>
+              </View>
+            </View>
+
+            <View style={{flex:2,alignItems:"center"}}>
+              <Image style={{width: 100, height: 100}}
+                source={rover}>
+              </Image>
+            </View>
+
+            <View style={{ flex: 1, backgroundColor: "#F5F5F5", justifyContent: "center" }}>
+              <Button
+                style={{}}
+                icon="close-circle-outline"
+                mode="outlined"
+                buttonColor='#0B3D91'
+                textColor='white'
+                onPress={hideModal}
+              >
                 {"Close"}
               </Button>
-          </View>
+            </View>
+          </>
         </Modal>
       </Portal>
     </View>
