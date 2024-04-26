@@ -11,12 +11,16 @@ export const styles = StyleSheet.create({
       justifyContent: "center",
       padding:10,
     },
-    footer:{
-      backgroundColor:"#F5F5F5",
-      justifyContent:"center",
-      alignContent:"stretch",
-      flex: 1,
+    footer: {
+      position: 'absolute',
+      bottom: 0,
+      left: 0,
+      right: 0,
+      backgroundColor: "#F5F5F5",
+      justifyContent: "center",
+      alignContent: "stretch",
     },
+    
     buttonContainer:{
       paddingTop:5,
       flex: 1,

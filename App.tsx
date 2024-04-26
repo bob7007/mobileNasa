@@ -4,7 +4,7 @@ import * as React from 'react';
 import BaseApp from "./src/baseApp";
 import { Provider as PaperProvider, useTheme } from 'react-native-paper';
 import { AppRegistry } from 'react-native';
-import {expo} from './app.json';
+import appConfig from './app.json';
 
 
 export default function App() {
@@ -22,4 +22,4 @@ export default function App() {
   );
 }
 
-AppRegistry.registerComponent(expo.name, () => App);
+AppRegistry.registerComponent(appConfig.expo.name, () => App);
